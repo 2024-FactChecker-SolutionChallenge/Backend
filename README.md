@@ -1,4 +1,4 @@
-# 2024-(팀명)-SolutionChallenge-BE
+# 2024-FactChecker-SolutionChallenge-BE
 This is the spring backend code for the (프로젝트명) UI.
 
 ## API endpoints
