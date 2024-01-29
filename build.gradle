@@ -11,14 +11,6 @@ java {
     sourceCompatibility = '11'
 }
 
-jar {
-    enabled = false
-}
-
-bootJar {
-    archiveBaseName = 'app'
-    archiveFileName = 'app.jar'
-}
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -42,6 +34,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.jar {
+    enabled = false
+}
+
+tasks.bootJar{
+    enabled = tru
 }
 
 tasks.named('bootBuildImage') {
