@@ -15,6 +15,10 @@ jar {
     enabled = false
 }
 
+bootJar {
+    archiveBaseName = 'app'
+    archiveFileName = 'app.jar'
+}
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
