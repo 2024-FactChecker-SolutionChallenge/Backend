@@ -41,7 +41,7 @@ tasks.jar {
 }
 
 tasks.bootJar{
-    enabled = tru
+    enabled = true
 }
 
 tasks.named('bootBuildImage') {
