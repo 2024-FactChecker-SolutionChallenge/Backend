@@ -14,11 +14,11 @@ spring:
         show_sql: true
         use_sql_comments: true
 
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/solutionchallenge
-#    username: solutionchallenge_root
-#    password: solutionchallenge1234
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://34.22.110.202:3306/fcdb
+    username: root
+    password: howtofactcheck
 
 logging:
   level:
