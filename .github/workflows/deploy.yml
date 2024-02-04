@@ -38,8 +38,8 @@ jobs:
       - name: Set environment values
         run: |
           cd ./src/main/resources
-          touch ./application.yml
-          echo "${{ secrets.APPLICATION }}" > ./application.yml
+          touch ./application.properties
+          echo "${{ secrets.APPLICATION }}" > ./application.properties
         shell: bash
       # Gradle build (Test 제외)
       - name: Build with Gradle
