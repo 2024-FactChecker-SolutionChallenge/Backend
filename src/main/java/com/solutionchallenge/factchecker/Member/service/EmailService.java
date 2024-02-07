@@ -82,7 +82,7 @@ public class EmailService {
         MimeMessage message = createMessage(to, ePw);
         log.info(String.valueOf(message));
 
-        try { // 예외처리
+        try { // 예외처리        message.setFrom(new InternetAddress("truetree.factchecker@gmail.com", "factchecker"));
             emailSender.send(message);
             log.info("이메일 전송에 성공");
         } catch (MailException es) {

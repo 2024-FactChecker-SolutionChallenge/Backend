@@ -16,9 +16,6 @@ public class MemberSignupRequest {
     @NotBlank(message = "이메일을 입력해야 합니다.")
     private String email;
 
-    @NotBlank(message = "인증번호를 입력해야 합니다.")
-    private String emailVerificationCode;
-
     @NotBlank(message = "비밀번호를 입력해야 합니다.")
     private String password;
 
@@ -46,13 +43,6 @@ public class MemberSignupRequest {
         this.email = email;
     }
 
-    public String getEmailVerificationCode() {
-        return emailVerificationCode;
-    }
-
-    public void setEmailVerificationCode(String emailVerificationCode) {
-        this.emailVerificationCode = emailVerificationCode;
-    }
 
     public String getPassword() {
         return password;

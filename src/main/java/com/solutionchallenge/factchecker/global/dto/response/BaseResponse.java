@@ -12,6 +12,7 @@ public class BaseResponse<T> {
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
+    private ErrorCode errorCode;
 
     //성공
     public BaseResponse(T result) {
@@ -19,6 +20,7 @@ public class BaseResponse<T> {
         this.code = ErrorCode.SUCCESS.getCode();
         this.message = ErrorCode.SUCCESS.getMessage();
         this.result = result;
+        this.errorCode = ErrorCode.SUCCESS;
     }
 
     // 오류 발생
@@ -26,6 +28,7 @@ public class BaseResponse<T> {
         this.isSuccess = errorCode.getIsSuccess();
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
+        this.errorCode = errorCode;
     }
 
     public BaseResponse(ErrorCode errorCode, T result) {
@@ -33,5 +36,14 @@ public class BaseResponse<T> {
         this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
         this.result = result;
+        this.errorCode = errorCode;
     }
+
+    public BaseResponse(String successMessage) {
+        this.isSuccess = true;
+        this.code = ErrorCode.SUCCESS.getCode();
+        this.message = successMessage;
+        this.errorCode = ErrorCode.SUCCESS;
+    }
+
 }

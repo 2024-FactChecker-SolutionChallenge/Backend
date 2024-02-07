@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class MemberSignupResponse {
 
+    private Long userId;  // userId 추가
     private String nickname;
     private String email;
     private String grade;
@@ -12,13 +13,13 @@ public class MemberSignupResponse {
     public MemberSignupResponse() {
     }
 
-    public MemberSignupResponse(String nickname, String email, String grade, Map<String, String> interests) {
+    public MemberSignupResponse(Long userId, String nickname, String email, String grade, Map<String, String> interests) {
+        this.userId = userId;
         this.nickname = nickname;
         this.email = email;
         this.grade = grade;
         this.interests = interests;
     }
-
 
     public String getNickname() {
         return nickname;
