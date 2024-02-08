@@ -1,9 +1,12 @@
 package com.solutionchallenge.factchecker.api.Member.entity;
 import com.solutionchallenge.factchecker.global.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import io.swagger.models.auth.In;
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +18,9 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @Entity
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class)
+})
 public class Member extends BaseTimeEntity implements UserDetails {
 
     @Id
@@ -28,20 +34,20 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private Grade grade;
+//
+//    @Column(name = "interests")
+//    @NotNull
+//    @Enumerated(EnumType.ORDINAL)
+//    private Interests interests;
+//
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private Map<String, String> interests = new HashMap<>();
 
-    @Column(name = "interests")
-    @NotNull
-    @Enumerated(EnumType.ORDINAL)
-    private Interests interests;
-//
-//    @Type(type = "json")
-//    @Column(columnDefinition = "json")
-//    private Map<String, String> interests = new HashMap<>();
-//
 
     // 회원가입용
     @Builder
-    public Member(String id, String password, String nickname, Grade grade , Interests interests) {
+    public Member(String id, String password, String nickname, Grade grade , Map<String , String> interests) {
         this.id = id;
         this.password = password;
         this.nickname = nickname;

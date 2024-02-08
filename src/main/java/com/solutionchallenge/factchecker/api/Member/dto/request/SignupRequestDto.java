@@ -20,7 +20,8 @@ public class SignupRequestDto {
     @NotBlank(message = "난이도를 선택해야 합니다.")
     String grade;
     @NotBlank(message = "관심분야를 선택해야 합니다.")
-    String interests;
+    Map<String, String> interests;
+//    String interests;
 //    Set<String> interests;
 
 //    Map<String, String> interests;

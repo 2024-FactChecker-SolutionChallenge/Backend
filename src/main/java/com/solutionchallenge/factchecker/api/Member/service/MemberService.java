@@ -4,7 +4,6 @@ import com.solutionchallenge.factchecker.api.Member.dto.request.SignupRequestDto
 import com.solutionchallenge.factchecker.api.Member.dto.response.LoginResponseDto;
  import com.solutionchallenge.factchecker.api.Member.dto.response.TokenResponseDto;
 import com.solutionchallenge.factchecker.api.Member.entity.Grade;
-import com.solutionchallenge.factchecker.api.Member.entity.Interests;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.global.auth.JwtUtil;
@@ -37,8 +36,6 @@ public class MemberService {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
         Grade grade = Grade.getGrade(signupRequestDto.getGrade());
-        Interests interests = Interests.getInterests(signupRequestDto.getInterests());
-
 
 
         Member member = Member.builder()
@@ -46,7 +43,7 @@ public class MemberService {
                 .nickname(signupRequestDto.getNickname())
                 .password(encodedPassword)
                 .grade(grade)
-                .interests(interests)
+                .interests(signupRequestDto.getInterests())
                 .build();
         memberRepository.save(member);
 
