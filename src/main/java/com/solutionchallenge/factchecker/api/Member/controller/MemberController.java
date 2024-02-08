@@ -9,7 +9,6 @@ import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.api.Member.service.EmailService;
 import com.solutionchallenge.factchecker.api.Member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,8 +65,9 @@ public class MemberController {
             SignupResponseDto responseDto = SignupResponseDto.builder()
                     .id(member.getId())
                     .nickname(member.getNickname())
-//                    .grade(requestDto.getGrade())
-//                    .interests(requestDto.getInterests())
+                    .grade(requestDto.getGrade())
+                    .interests(requestDto.getInterests())
+//                    .interests(requestDto.getInterests()) //json 형식
                     .build();
             return ResponseEntity.ok(responseDto);
         }

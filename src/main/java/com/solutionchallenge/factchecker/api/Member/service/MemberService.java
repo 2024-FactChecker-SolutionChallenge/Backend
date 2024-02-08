@@ -4,20 +4,20 @@ import com.solutionchallenge.factchecker.api.Member.dto.request.SignupRequestDto
 import com.solutionchallenge.factchecker.api.Member.dto.response.LoginResponseDto;
  import com.solutionchallenge.factchecker.api.Member.dto.response.TokenResponseDto;
 import com.solutionchallenge.factchecker.api.Member.entity.Grade;
+import com.solutionchallenge.factchecker.api.Member.entity.Interests;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.global.auth.JwtUtil;
 import com.solutionchallenge.factchecker.global.entity.RefreshToken;
 import com.solutionchallenge.factchecker.global.repository.RefreshTokenRepository;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
 
 @Slf4j
 @Service
@@ -34,17 +34,19 @@ public class MemberService {
      */
     @Transactional
     public Member signup(HttpServletResponse res, SignupRequestDto signupRequestDto) throws Exception {
-
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
         Grade grade = Grade.getGrade(signupRequestDto.getGrade());
+        Interests interests = Interests.getInterests(signupRequestDto.getInterests());
+
+
 
         Member member = Member.builder()
                 .id(signupRequestDto.getId())
                 .nickname(signupRequestDto.getNickname())
                 .password(encodedPassword)
                 .grade(grade)
-                .interests(signupRequestDto.getInterests())
+                .interests(interests)
                 .build();
         memberRepository.save(member);
 
@@ -80,12 +82,12 @@ public class MemberService {
                 throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
             }
 
+
+
             TokenResponseDto tokenResponseDto = jwtUtil.createAllToken(member.getId());
             jwtUtil.setHeaderToken(res, tokenResponseDto);
 
             log.info("[로그인 알림] {} 회원님이 로그인했습니다.", member.getId());
-
-
 
 
             return LoginResponseDto.builder()
@@ -96,5 +98,4 @@ public class MemberService {
     }
 
     /* */
-
 }

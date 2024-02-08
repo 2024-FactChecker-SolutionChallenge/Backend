@@ -3,6 +3,7 @@ package com.solutionchallenge.factchecker.api.Member.dto.request;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,13 @@ public class SignupRequestDto {
     String nickname;
     @NotBlank(message = "난이도를 선택해야 합니다.")
     String grade;
-    Map<String, String> interests;
+    @NotBlank(message = "관심분야를 선택해야 합니다.")
+    String interests;
+//    Set<String> interests;
 
 //    Map<String, String> interests;
 //    String picture;
+//    public SignupRequestDto() {
+//        this.interests = new HashMap<>();
+//    }
 }

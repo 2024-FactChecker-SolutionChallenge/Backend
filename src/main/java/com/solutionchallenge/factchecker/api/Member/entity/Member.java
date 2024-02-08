@@ -1,6 +1,7 @@
 package com.solutionchallenge.factchecker.api.Member.entity;
 import com.solutionchallenge.factchecker.global.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;
+import io.swagger.models.auth.In;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,34 +29,25 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Enumerated(EnumType.ORDINAL)
     private Grade grade;
 
-    @Type(type = "json")
-    @Column(name = "user_interests", columnDefinition = "json")
-    private Map<String, String> interests = new HashMap<>();
+    @Column(name = "interests")
+    @NotNull
+    @Enumerated(EnumType.ORDINAL)
+    private Interests interests;
 //
 //    @Type(type = "json")
-//    @Column(name = "user_interests", columnDefinition = "json")
+//    @Column(columnDefinition = "json")
 //    private Map<String, String> interests = new HashMap<>();
-
-
-
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-//    private List<MailAccount> mailAccount = new ArrayList<>();
-
 //
-//    @ElementCollection
-//    @CollectionTable
-//    private Set<String> attendance; // 출석부는 중복 xx
-
 
     // 회원가입용
     @Builder
-    public Member(String id, String password, String nickname, Grade grade, Map<String, String> interests ) {
+    public Member(String id, String password, String nickname, Grade grade , Interests interests) {
         this.id = id;
         this.password = password;
         this.nickname = nickname;
         this.grade = grade;
-        this.interests=interests;
+        this.interests = interests;
+//        this.interests = interests;
 
       }
 

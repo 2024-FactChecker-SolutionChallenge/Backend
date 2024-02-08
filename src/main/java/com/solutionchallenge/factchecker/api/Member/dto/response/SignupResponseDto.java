@@ -10,14 +10,16 @@ public class SignupResponseDto {
     String id;
     String nickname;
     String grade;
-    Map<String, String> interests;
+    String interests;
+//    Map<String, String> interests;
 
 
     @Builder
-    public SignupResponseDto(String id, String nickname, String grade, Map<String, String> interests) {
+    public SignupResponseDto(String id, String nickname, String grade, String interests) {
         this.id = id;
         this.nickname = nickname;
         this.grade = grade;
         this.interests = interests;
+//        this.interests = interests;
     }
 }
