@@ -1,4 +1,4 @@
-package com.solutionchallenge.factchecker.Member.dto.request;
+package com.solutionchallenge.factchecker.api.Member.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

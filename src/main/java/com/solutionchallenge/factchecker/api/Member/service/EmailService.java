@@ -1,4 +1,4 @@
-package com.solutionchallenge.factchecker.Member.service;
+package com.solutionchallenge.factchecker.api.Member.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;

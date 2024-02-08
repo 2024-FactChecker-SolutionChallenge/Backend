@@ -1,4 +1,4 @@
-package com.solutionchallenge.factchecker.Member.entity;
+package com.solutionchallenge.factchecker.api.Member.entity;
 
 public enum Grade {
     BEGINNER("beginner"),

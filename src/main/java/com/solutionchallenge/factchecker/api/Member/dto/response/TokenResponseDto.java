@@ -1,12 +1,12 @@
-package com.solutionchallenge.factchecker.Member.dto.response;
+package com.solutionchallenge.factchecker.api.Member.dto.response;
 import lombok.Data;
 
 @Data
-public class TokenResponse {
+public class TokenResponseDto {
     private String accessToken;
     private String refreshToken;
 
-    public TokenResponse(String accessToken, String refreshToken) {
+    public TokenResponseDto(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

@@ -1,6 +1,6 @@
-package com.solutionchallenge.factchecker.global.entity;
+package com.solutionchallenge.factchecker.api.Member.entity;
 
-import com.solutionchallenge.factchecker.Member.entity.Member;
+import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,51 +10,50 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 public class UserDetailsImpl implements UserDetails {
 
-    private final Member member;
+    private Member member;
 
-    public UserDetailsImpl(Member member) {
+    public Member getMember() {
+        return this.member;
+    }
+
+    public void setMember(Member member) {
         this.member = member;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        return authorities;
+        return null;
     }
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return member.getId();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return false;
     }
 }
