@@ -1,24 +1,28 @@
 package com.solutionchallenge.factchecker.global.config;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.OpenAPI;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Bean;
+import org.springdoc.core.GroupedOpenApi;
 
-//http://localhost:8080/swagger-ui/index.html
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+
 @Configuration
 public class SwaggerConfig {
-    private final String TITLE = "2024-SolutionChallenge";
-    private final String DESCRIPTION = "GDSC 2024-SolutionChallenge Backend API";
-    private final String VERSION = "V1.0.0";
 
     @Bean
-    public OpenAPI api() {
-        return new OpenAPI()
-                .info(new Info()
-                        .title(TITLE)
-                        .description(DESCRIPTION)
-                        .version(VERSION)
-                );
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("v1-definition")
+                .pathsToMatch("/api/**")
+                .build();
     }
 
+    @Bean
+    public OpenAPI springShopOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Fact-Checker")
+                        .description("GDSC 2024 Team Fact-Checker <TrueTree> 서비스입니다.")
+                        .version("v0.0.1"));
+    }
 }
