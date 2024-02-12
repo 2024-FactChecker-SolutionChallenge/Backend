@@ -1,16 +1,15 @@
-package com.solutionchallenge.factchecker.learn.service;
+package com.solutionchallenge.factchecker.api.Learn.service;
 
-import com.solutionchallenge.factchecker.learn.domain.QuizWordRepository;
-import com.solutionchallenge.factchecker.learn.domain.Word;
-import com.solutionchallenge.factchecker.learn.domain.WordRepository;
-import com.solutionchallenge.factchecker.learn.dto.response.WordResponseDto;
-import lombok.RequiredArgsConstructor;
+import com.solutionchallenge.factchecker.api.Learn.exception.LearnExceptionHandler;
+import com.solutionchallenge.factchecker.api.Member.entity.Member;
+import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
+import com.solutionchallenge.factchecker.api.Learn.entity.Word;
+import com.solutionchallenge.factchecker.api.Learn.repository.WordRepository;
+import com.solutionchallenge.factchecker.api.Learn.dto.response.WordResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,17 +17,15 @@ import java.util.stream.Collectors;
 //Module Service
 @Service
 public class WordService {
-    private final UserRepository userRepository;
     private final WordRepository wordRepository;
 
     @Autowired
-    public WordService(UserRepository userRepository, WordRepository wordRepository) {
-        this.userRepository = userRepository;
+    public WordService(WordRepository wordRepository) {
         this.wordRepository = wordRepository;
     }
 
-    public List<WordResponseDto> getWordList(Long userId) {
-        List<Word> words = wordRepository.findAllByUserId(userId);
+    public List<WordResponseDto> getWordList(String member_id) {
+        List<Word> words = wordRepository.findAllByMemberIdOrderByCreatedDateDesc(member_id);
 
         // WordResponseDto로 변환하여 반환
         return words.stream()
@@ -36,9 +33,10 @@ public class WordService {
                 .collect(Collectors.toList());
     }
 
-    public WordResponseDto updateWordStatus(Long wordId, Long userId) {
+
+    public WordResponseDto updateWordStatus(Long wordId, String member_id) {
         // 해당 유저의 단어 목록에서 wordId에 해당하는 단어 찾기
-        Optional<Word> optionalWord = wordRepository.findByIdAndUser_WordId(wordId, userId);
+        Optional<Word> optionalWord = wordRepository.findByWordIdAndMember_Id(wordId, member_id);
         if (optionalWord.isPresent()) {
             // 해당하는 단어를 찾았으면 상태 업데이트
             Word word = optionalWord.get();
@@ -47,12 +45,11 @@ public class WordService {
             Word updatedWord = wordRepository.save(word);
             return new WordResponseDto(updatedWord);
         } else {
-            //throw new CustomException("Word not found or does not belong to the User");
+            throw new LearnExceptionHandler("User not found");
         }
     }
-    public List<WordResponseDto> getUnknownWordList(Long userId) {
-        List<Word> words = wordRepository.findByUserIdAndKnowStatus(userId, false);
-
+    public List<WordResponseDto> getUnknownWordList(String member_id) {
+        List<Word> words = wordRepository.findByMember_IdAndKnowStatus(member_id, false);
 
         // WordResponseDto로 변환하여 반환
         return words.stream()

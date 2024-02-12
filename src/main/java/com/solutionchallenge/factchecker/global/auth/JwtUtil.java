@@ -5,6 +5,7 @@ import com.solutionchallenge.factchecker.global.entity.RefreshToken;
 import com.solutionchallenge.factchecker.global.repository.RefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,8 @@ public class JwtUtil {
 
     // header 토큰을 가져오는 기능
     public String getHeaderToken(HttpServletRequest request, String type) {
-        return type.equals("Access") ? request.getHeader(ACCESS_TOKEN) :request.getHeader(REFRESH_TOKEN);
+        log.info("[header에서 token get] : "+request.getHeader(HttpHeaders.AUTHORIZATION));
+        return type.equals("Access") ? request.getHeader(HttpHeaders.AUTHORIZATION) :request.getHeader(REFRESH_TOKEN);
     }
 
     // 토큰 생성

@@ -1,4 +1,4 @@
-package com.solutionchallenge.factchecker.learn.domain;
+package com.solutionchallenge.factchecker.api.Learn.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter
-@Table(name = "word")
+@Table(name = "quiz_word")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuizWord {
     @Id

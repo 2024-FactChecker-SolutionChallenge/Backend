@@ -1,11 +1,10 @@
-package com.solutionchallenge.factchecker.learn.domain;
+package com.solutionchallenge.factchecker.api.Learn.entity;
 
-import com.sun.xml.bind.v2.TODO;
+import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.function.ToDoubleBiFunction;
 
 @Entity
 @Getter
@@ -14,7 +13,7 @@ import java.util.function.ToDoubleBiFunction;
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wordId", unique = true, nullable = false)
+    @Column(name = "word_Id", unique = true, nullable = false)
     private Long wordId;
 
     @Column(name = "word")
@@ -24,23 +23,22 @@ public class Word {
     @Column(name = "mean")
     private String mean;
 
-    @Column(name= "knowStatus")
+    @Column(name= "know_status")
     @NotNull
     private boolean knowStatus;
 
-    @Column(name = "createdDate")
+    @Column(name = "created_date")
     @NotNull
     private Timestamp createdDate;
 
-    @Column(name = "modifiedDate")
+    @Column(name = "modified_date")
     @NotNull
     private Timestamp modifiedDate;
 
     // User 엔터티에 대한 참조 (외래 키)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    @NotNull
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Builder
     public Word(Long wordId, String word, String mean, boolean knowStatus, Timestamp createdDate, Timestamp modifiedDate) {
