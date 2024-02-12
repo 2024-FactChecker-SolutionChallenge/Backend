@@ -1,15 +1,18 @@
 package com.solutionchallenge.factchecker.api.Member.repository;
 
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
+import com.vladmihalcea.spring.repository.HibernateRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.Map;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, String> {
     public boolean existsMemberById(String id);
     public boolean existsMemberByNickname(String nickname);
     public Member findMemberById(String id);
-
 }
