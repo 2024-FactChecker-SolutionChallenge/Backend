@@ -33,7 +33,9 @@ public class LearnController {
     @Operation(summary = "단어장 - 단어 리스트 조회", description = "단어장에 올릴 단어들을 조회합니다. 이때 생성일 기준 최신순으로 정렬해서 가져옵니다.",
             responses = {@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = WordResponseDto.class))))})
     @GetMapping("/words")
-    public ResponseEntity<?> returnWords(@RequestHeader String Authorization){
+    public ResponseEntity<?> returnWords(
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl)principal;
 
@@ -45,7 +47,9 @@ public class LearnController {
     @Operation(summary = "단어장 - 단어 knowstatus 정보 수정", description = "단어장에서 토글버튼을 누르면 받아온 값에 따라 true-> false/ false -> true 전환",
             responses = {@ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = WordResponseDto.class)))})
     @PatchMapping("/wordlist/{wordId}")
-    public ResponseEntity<?> setWordKnowStatus(@PathVariable Long wordId, @RequestHeader String Authorization) {
+    public ResponseEntity<?> setWordKnowStatus(@PathVariable Long wordId,
+                                               @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+                                               @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl)principal;
 
@@ -56,7 +60,9 @@ public class LearnController {
     @Operation(summary = "어휘학습 - flip card", description = "모르는 단어 리스트를 랜덤으로 가져온다 -> flip card로 제공",
             responses = {@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = WordResponseDto.class))))})
     @GetMapping("/study/flip-cards/word")
-    public ResponseEntity<?> returnFlipCardWords(@RequestHeader String Authorization){
+    public ResponseEntity<?> returnFlipCardWords(
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl)principal;
@@ -68,8 +74,7 @@ public class LearnController {
     @Operation(summary = "데일리 퀴즈", description = "퀴즈 -  랜덤퀴즈단어 4개 리스트로 조회",
             responses = {@ApiResponse(responseCode = "200", description = "퀴즈용 단어를 불러오는데 성공했습니다.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = QuizWordResponseDto.class))))})
     @GetMapping("/study/daily-quiz/word")
-    public ResponseEntity<?> returnFlipCard(
-    ){
+    public ResponseEntity<?> returnFlipCard(){
         List<QuizWordResponseDto> list  = learnService.getQuiz();
         return ResponseEntity.ok().body(list);
     }
@@ -81,7 +86,8 @@ public class LearnController {
     @PostMapping("/study/daily-quiz/score")
     public ResponseEntity<?> setScore(
             @RequestBody DailyQuizRequestDto dailyQuizRequestDto,
-            @RequestHeader String Authorization
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
     ) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl) principal;

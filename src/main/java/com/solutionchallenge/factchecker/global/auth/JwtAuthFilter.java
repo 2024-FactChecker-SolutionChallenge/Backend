@@ -31,8 +31,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // Access / Refresh 헤더에서 토큰을 가져옴.
         String token = jwtUtil.getHeaderToken(request, "Access");
         String refreshToken = jwtUtil.getHeaderToken(request, "Refresh");
-
-        if (token != null && (token.startsWith("Bearer ")||token.startsWith("bearer "))) {
+        if(token != null) {
             String accessToken = token.substring(7);
             if (accessToken != null) {
                 log.info("[dofilterInternal] : access token 존재");

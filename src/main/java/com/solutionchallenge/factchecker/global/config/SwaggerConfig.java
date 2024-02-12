@@ -24,16 +24,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI springShopOpenAPI() {
-        SecurityScheme apiKey = new SecurityScheme()
-                .type(SecurityScheme.Type.APIKEY)
-                .in(SecurityScheme.In.HEADER)
-                .name("Authorization");
-
-        SecurityRequirement securityRequirement = new SecurityRequirement()
-                .addList("Bearer Token");
         return new OpenAPI()
-                .components(new Components().addSecuritySchemes("Bearer Token", apiKey))
-                .addSecurityItem(securityRequirement)
                 .info(new Info().title("Fact-Checker")
                         .description("GDSC 2024 Team Fact-Checker <TrueTree> 서비스입니다.")
                         .version("v0.0.1"));

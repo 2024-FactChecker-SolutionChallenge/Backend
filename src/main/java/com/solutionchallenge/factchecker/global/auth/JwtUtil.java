@@ -52,8 +52,7 @@ public class JwtUtil {
 
     // header 토큰을 가져오는 기능
     public String getHeaderToken(HttpServletRequest request, String type) {
-        log.info("[header에서 token get] : "+request.getHeader(HttpHeaders.AUTHORIZATION));
-        return type.equals("Access") ? request.getHeader(HttpHeaders.AUTHORIZATION) :request.getHeader(REFRESH_TOKEN);
+        return type.equals("Access") ? request.getHeader(ACCESS_TOKEN) :request.getHeader(REFRESH_TOKEN);
     }
 
     // 토큰 생성
