@@ -44,7 +44,7 @@ public class QuizWordService {
             .map(QuizWordResponseDto::new)
                 .collect(Collectors.toList());
     }
-
+    @Transactional(readOnly = false)
     public DailyQuizResponseDto updateScore(String member_id, String day, int score) {
         List<String> validDays = Arrays.asList("월", "화", "수", "목", "금", "토", "일");
         if (!validDays.contains(day)) {

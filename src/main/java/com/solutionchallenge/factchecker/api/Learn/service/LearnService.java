@@ -13,7 +13,6 @@ import java.util.List;
 //Component Service
 @AllArgsConstructor
 @Service
-@Transactional(readOnly = true)
 public class LearnService {
 
     private final WordService wordService;

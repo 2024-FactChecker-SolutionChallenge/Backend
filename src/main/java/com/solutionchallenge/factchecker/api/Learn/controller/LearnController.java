@@ -43,7 +43,6 @@ public class LearnController {
         return ResponseEntity.ok().body(list);
     }
 
-    @Transactional(readOnly = false)
     @Operation(summary = "단어장 - 단어 knowstatus 정보 수정", description = "단어장에서 토글버튼을 누르면 받아온 값에 따라 true-> false/ false -> true 전환",
             responses = {@ApiResponse(responseCode = "200", description = "수정 성공", content = @Content(schema = @Schema(implementation = WordResponseDto.class)))})
     @PatchMapping("/wordlist/{wordId}")
@@ -78,7 +77,6 @@ public class LearnController {
         List<QuizWordResponseDto> list  = learnService.getQuiz();
         return ResponseEntity.ok().body(list);
     }
-    @Transactional(readOnly = false)
     @Operation(summary = "데일리 퀴즈 - 퀴즈점수 저장", description = "퀴즈 점수를 저장한다.",
             responses = {@ApiResponse(responseCode = "200", description = "일일 점수가 성공적으로 저장되었습니다.",
                             content = @Content(schema = @Schema(implementation = DailyQuizResponseDto.class)))

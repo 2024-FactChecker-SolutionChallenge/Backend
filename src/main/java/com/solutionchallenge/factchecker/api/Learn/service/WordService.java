@@ -33,7 +33,7 @@ public class WordService {
                 .collect(Collectors.toList());
     }
 
-
+    @Transactional(readOnly = false)
     public WordResponseDto updateWordStatus(Long wordId, String member_id) {
         // 해당 유저의 단어 목록에서 wordId에 해당하는 단어 찾기
         Optional<Word> optionalWord = wordRepository.findByWordIdAndMember_Id(wordId, member_id);
