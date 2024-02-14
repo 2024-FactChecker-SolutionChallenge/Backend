@@ -1,12 +1,11 @@
 package com.solutionchallenge.factchecker.api.Learn.controller;
 
+import com.solutionchallenge.factchecker.api.Learn.dto.response.ChallengeQuizResponseDto;
 import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
-import com.solutionchallenge.factchecker.api.Learn.dto.response.DailyQuizResponseDto;
-import com.solutionchallenge.factchecker.api.Learn.dto.response.QuizWordResponseDto;
+import com.solutionchallenge.factchecker.api.Learn.dto.response.DailyQuizScoreResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.WordResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.request.DailyQuizRequestDto;
 import com.solutionchallenge.factchecker.api.Learn.service.LearnService;
-import com.solutionchallenge.factchecker.global.exception.GlobalResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +16,6 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 import java.util.List;
@@ -69,17 +67,10 @@ public class LearnController {
         List<WordResponseDto> list  = learnService.getUnknownWordList(userDetails.getUsername());
         return ResponseEntity.ok().body(list);
     }
-    //랜덤이므로 querydsl 사용예정- 랜덤 단어 4개 뽑아오기
-    @Operation(summary = "데일리 퀴즈", description = "퀴즈 -  랜덤퀴즈단어 4개 리스트로 조회",
-            responses = {@ApiResponse(responseCode = "200", description = "퀴즈용 단어를 불러오는데 성공했습니다.", content = @Content(array = @ArraySchema(schema = @Schema(implementation = QuizWordResponseDto.class))))})
-    @GetMapping("/study/daily-quiz/word")
-    public ResponseEntity<?> returnFlipCard(){
-        List<QuizWordResponseDto> list  = learnService.getQuiz();
-        return ResponseEntity.ok().body(list);
-    }
+
     @Operation(summary = "데일리 퀴즈 - 퀴즈점수 저장", description = "퀴즈 점수를 저장한다.",
             responses = {@ApiResponse(responseCode = "200", description = "일일 점수가 성공적으로 저장되었습니다.",
-                            content = @Content(schema = @Schema(implementation = DailyQuizResponseDto.class)))
+                            content = @Content(schema = @Schema(implementation = DailyQuizScoreResponseDto.class)))
             })
     @PostMapping("/study/daily-quiz/score")
     public ResponseEntity<?> setScore(
@@ -90,7 +81,23 @@ public class LearnController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl) principal;
 
-        DailyQuizResponseDto dto = learnService.updateScore(userDetails.getUsername(), dailyQuizRequestDto.getDay(), dailyQuizRequestDto.getScore());
+        DailyQuizScoreResponseDto dto = learnService.updateScore(userDetails.getUsername(), dailyQuizRequestDto.getDay(), dailyQuizRequestDto.getScore());
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @Operation(summary = "데일리 퀴즈 - 퀴즈 도전", description = "남은 데일리퀴즈 도전기회가 있는지 체크 후, 가능한 경우 기회를 한개 소진하며, 불가능한경우 예외를 반환한다.",
+            responses = {@ApiResponse(responseCode = "200", description = "데일리 퀴즈에 도전할 수 있습니다.",
+                    content = @Content(schema = @Schema(implementation = ChallengeQuizResponseDto.class)))
+            })
+    @PatchMapping("/study/daily-quiz")
+    public ResponseEntity<?> ChallengeDailyQuiz(
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
+    ) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+        ChallengeQuizResponseDto dto = learnService.challengeDailyQuiz(userDetails.getUsername());
         return ResponseEntity.ok().body(dto);
     }
 

@@ -1,6 +1,5 @@
 package com.solutionchallenge.factchecker.global.exception;
 
-import com.solutionchallenge.factchecker.api.Learn.exception.LearnExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +15,14 @@ public class BaseExceptionHandler {
      * @param ex LearnException
      * @return ResponseEntity
      */
-    @ExceptionHandler(LearnExceptionHandler.class)
-    public ResponseEntity<?> handleLearnException(LearnExceptionHandler ex) {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<?> handleLearnException(CustomException ex) {
         log.debug("===========================================================");
-        log.debug("여기로 오는가?!");
+        log.debug("에러 핸들링 여기로 오는가?!");
         log.debug("===========================================================");
 
-        final GlobalResponse<Object> response = GlobalResponse.fail();
+        final GlobalResponse<Object> response = GlobalResponse.notfound(ex.getMessage(), null);
+
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

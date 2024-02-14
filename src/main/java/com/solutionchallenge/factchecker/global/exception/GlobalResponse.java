@@ -67,4 +67,10 @@ public class GlobalResponse<T> {
         return new GlobalResponse(new GlobalResponseHeader(FORBIDDEN, FORBIDDEN_MESSAGE), map);
     }
 
+    public static <T> GlobalResponse<T> notfound(String msg, T body) {
+        Map<String, T> map = new HashMap<>();
+        map.put(msg, body);
+        return new GlobalResponse(new GlobalResponseHeader(NOT_FOUND, NOT_FOUND_MESSAGE), map);
+    }
+
 }

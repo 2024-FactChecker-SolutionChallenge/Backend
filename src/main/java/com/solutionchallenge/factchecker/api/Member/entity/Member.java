@@ -44,10 +44,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Type(type = "json")
     private Map<String, Integer> dailyScore= new HashMap<>();
 
-
+    @NotNull
+    private int left_opportunity;
     // 회원가입용
     @Builder
-    public Member(String id, String password, String nickname, Grade grade , Map<String , String> interests) {
+    public Member(String id, String password, String nickname, Grade grade , Map<String , String> interests, int left_opportunity) {
         this.id = id;
         this.password = password;
         this.nickname = nickname;
@@ -62,6 +63,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
                 "토", 0,
                 "일", 0
         );
+        this.left_opportunity = 1;
       }
 
 
@@ -109,5 +111,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     public void updateScore(HashMap<String, Integer> map) {
         setDailyScore(map);
+    }
+
+    public void consumeLeftOpportunities() {
+        this.left_opportunity -= 1;
+
     }
 }
