@@ -6,16 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DailyQuizResponseDto {
+public class ChallengeQuizResponseDto {
     private String userId;
-    private Map<String, Integer> dailyScore;
+    private int left_opportunities;
     // 생성자, getter, setter 등 필요한 메서드들 추가
 
-    public DailyQuizResponseDto(Member member) {
+    public ChallengeQuizResponseDto(Member member) {
         this.userId = member.getId();
-        this.dailyScore = member.getDailyScore();
+        this.left_opportunities = member.getLeft_opportunity();
     }
 }

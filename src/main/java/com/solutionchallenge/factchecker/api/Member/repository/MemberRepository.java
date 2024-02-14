@@ -9,10 +9,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, String> {
     public boolean existsMemberById(String id);
     public boolean existsMemberByNickname(String nickname);
-    public Member findMemberById(String id);
+    public Optional<Member> findMemberById(String id);
 }

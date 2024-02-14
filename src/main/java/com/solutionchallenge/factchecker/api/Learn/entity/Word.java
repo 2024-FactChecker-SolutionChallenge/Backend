@@ -54,7 +54,6 @@ public class Word {
         this.word= word;
         this.mean= mean;
         this.knowStatus = knowStatus;
-        // TODO : modified 날짜도 updateWord를 호출한 당시로 갱신해준다.
-
+        this.modifiedDate = new Timestamp(System.currentTimeMillis()); //수정 날짜도 현재 시간으로 갱신
     }
 }

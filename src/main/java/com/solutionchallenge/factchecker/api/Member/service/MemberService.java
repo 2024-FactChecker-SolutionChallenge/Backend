@@ -8,8 +8,8 @@ import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.global.auth.JwtUtil;
 import com.solutionchallenge.factchecker.global.entity.RefreshToken;
+import com.solutionchallenge.factchecker.global.exception.CustomException;
 import com.solutionchallenge.factchecker.global.repository.RefreshTokenRepository;
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -73,7 +73,7 @@ public class MemberService {
         }
 
         else {
-            Member member = memberRepository.findMemberById(loginRequestDto.getId());
+            Member member = memberRepository.findMemberById(loginRequestDto.getId()).orElseThrow(()->new CustomException("User not found"));
 
             if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
                 throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");

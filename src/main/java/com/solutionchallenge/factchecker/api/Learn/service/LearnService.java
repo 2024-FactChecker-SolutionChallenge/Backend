@@ -1,12 +1,11 @@
 package com.solutionchallenge.factchecker.api.Learn.service;
 
-import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
-import com.solutionchallenge.factchecker.api.Learn.dto.response.DailyQuizResponseDto;
-import com.solutionchallenge.factchecker.api.Learn.dto.response.QuizWordResponseDto;
+import com.solutionchallenge.factchecker.api.Learn.dto.response.ChallengeQuizResponseDto;
+import com.solutionchallenge.factchecker.api.Learn.dto.response.DailyQuizScoreResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.WordResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 
@@ -16,7 +15,7 @@ import java.util.List;
 public class LearnService {
 
     private final WordService wordService;
-    private final QuizWordService quizWordService;
+    private final QuizService quizService;
 
     //wordservice 사용 - 저장된 단어들 조회
     public List<WordResponseDto> getWordList(String member_id) {
@@ -35,14 +34,13 @@ public class LearnService {
     }
 
 
-    //quizWordService 사용 - 랜덤 퀴즈단어 제공
-    public List<QuizWordResponseDto> getQuiz() {
-        return quizWordService.getRandomQuiz();
+    //quizService 사용 - 퀴즈 점수 저장
+    public DailyQuizScoreResponseDto updateScore(String member_id, String day, int Score) {
+        return quizService.updateScore(member_id, day, Score);
     }
-
-    //quizWordService 사용 - 퀴즈 점수 저장
-    public DailyQuizResponseDto updateScore(String member_id, String day, int Score) {
-        return quizWordService.updateScore(member_id, day, Score);
+    //quizService - 데일리 퀴즈 실행
+    public ChallengeQuizResponseDto challengeDailyQuiz(String member_id) {
+        return quizService.challengeDailyQuiz(member_id);
     }
 
 }
