@@ -89,7 +89,7 @@ public class LearnController {
             responses = {@ApiResponse(responseCode = "200", description = "데일리 퀴즈에 도전할 수 있습니다.",
                     content = @Content(schema = @Schema(implementation = ChallengeQuizResponseDto.class)))
             })
-    @PatchMapping("/study/daily-quiz")
+    @PatchMapping("/study/daily-quiz/try")
     public ResponseEntity<?> ChallengeDailyQuiz(
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
             @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN

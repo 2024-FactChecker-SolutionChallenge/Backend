@@ -2,7 +2,6 @@ package com.solutionchallenge.factchecker.api.Learn.service;
 
 import com.solutionchallenge.factchecker.api.Learn.dto.response.ChallengeQuizResponseDto;
 import com.solutionchallenge.factchecker.global.exception.CustomException;
-import com.solutionchallenge.factchecker.api.Learn.repository.QuizWordRepository;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.DailyQuizScoreResponseDto;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
@@ -17,12 +16,10 @@ import java.util.*;
 @Service
 @Slf4j
 public class QuizService {
-    private final QuizWordRepository quizWordRepository;
     private final MemberRepository memberRepository;
 
     @Autowired
-    public QuizService(QuizWordRepository quizWordRepository, MemberRepository memberRepository) {
-        this.quizWordRepository = quizWordRepository;
+    public QuizService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 
