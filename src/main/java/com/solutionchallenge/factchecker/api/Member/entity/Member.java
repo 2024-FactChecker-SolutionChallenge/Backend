@@ -44,6 +44,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Type(type = "json")
     private Map<String, Integer> dailyScore= new HashMap<>();
 
+    @Column(name = "selected_interests")
+    private String selectedInterests;
+
     @NotNull
     private int left_opportunity;
     // 회원가입용

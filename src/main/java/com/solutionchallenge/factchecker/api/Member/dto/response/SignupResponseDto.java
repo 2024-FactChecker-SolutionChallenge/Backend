@@ -10,7 +10,6 @@ public class SignupResponseDto {
     String id;
     String nickname;
     String grade;
-//    String interests;
     Map<String, String> interests;
 
 
@@ -20,6 +19,5 @@ public class SignupResponseDto {
         this.nickname = nickname;
         this.grade = grade;
         this.interests = interests;
-//        this.interests = interests;
     }
 }

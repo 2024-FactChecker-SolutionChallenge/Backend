@@ -16,4 +16,8 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     public boolean existsMemberById(String id);
     public boolean existsMemberByNickname(String nickname);
     public Optional<Member> findMemberById(String id);
+
+    @Modifying
+    @Query("UPDATE Member m SET m.interests = :interests WHERE m.id = :memberId")
+    void saveSelectedInterestForUserId(@Param("memberId") String memberId, @Param("interests") Map<String, String> interests);
 }
