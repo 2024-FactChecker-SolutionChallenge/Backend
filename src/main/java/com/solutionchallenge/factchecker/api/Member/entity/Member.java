@@ -8,8 +8,6 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.*;
 import java.util.*;
 
@@ -118,6 +116,5 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     public void consumeLeftOpportunities() {
         this.left_opportunity -= 1;
-
     }
 }

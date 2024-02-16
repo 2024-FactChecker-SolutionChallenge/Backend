@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,6 +41,9 @@ public class Youtube{
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @OneToMany(mappedBy = "youtube", fetch = FetchType.LAZY)
+    private List<RelatedNews> relatedNews = new ArrayList<>();
+
     @Builder
     public Youtube(Long id, @NotNull String url, @NotNull Timestamp createdDate, @NotNull Timestamp modifiedDate, Member member) {
         this.id = id;
@@ -46,5 +51,10 @@ public class Youtube{
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
         this.member = member;
+    }
+    public void updateKeywordAndUploadDate(String title, String keyword, String upload_date) {
+        this.title = title;
+        this.keyword = keyword;
+        this.upload_date = upload_date;
     }
 }
