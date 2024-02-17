@@ -2,10 +2,12 @@ package com.solutionchallenge.factchecker.api.Member.service;
 import com.solutionchallenge.factchecker.api.Member.dto.request.LoginRequestDto;
 import com.solutionchallenge.factchecker.api.Member.dto.request.SignupRequestDto;
 import com.solutionchallenge.factchecker.api.Member.dto.response.LoginResponseDto;
- import com.solutionchallenge.factchecker.api.Member.dto.response.TokenResponseDto;
+import com.solutionchallenge.factchecker.api.Member.dto.response.MyProfileResponseDto;
+import com.solutionchallenge.factchecker.api.Member.dto.response.TokenResponseDto;
 import com.solutionchallenge.factchecker.api.Member.entity.Grade;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
+import com.solutionchallenge.factchecker.api.Youtube.dto.response.ArticleDetailDto;
 import com.solutionchallenge.factchecker.global.auth.JwtUtil;
 import com.solutionchallenge.factchecker.global.entity.RefreshToken;
 import com.solutionchallenge.factchecker.global.exception.CustomException;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -37,7 +40,6 @@ public class MemberService {
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
         Grade grade = Grade.getGrade(signupRequestDto.getGrade());
 
-
         Member member = Member.builder()
                 .id(signupRequestDto.getId())
                 .nickname(signupRequestDto.getNickname())
@@ -45,6 +47,7 @@ public class MemberService {
                 .grade(grade)
                 .interests(signupRequestDto.getInterests())
                 .build();
+
         memberRepository.save(member);
 
         // 토큰 생성
@@ -79,8 +82,6 @@ public class MemberService {
                 throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
             }
 
-
-
             TokenResponseDto tokenResponseDto = jwtUtil.createAllToken(member.getId());
             jwtUtil.setHeaderToken(res, tokenResponseDto);
 
@@ -94,5 +95,14 @@ public class MemberService {
         }
     }
 
-    /* */
+    public MyProfileResponseDto getMyProfile(String member_id) {
+        Member member = memberRepository.findMemberById(member_id).orElseThrow(() -> new CustomException("User not found"));
+        Map<String, Integer> dailyScore = member.getDailyScore();
+        Map<String, Integer> weekNews = member.getWeekNews();
+
+
+        int dailyScoreSum = dailyScore.values().stream().mapToInt(Integer::intValue).sum();
+        int weekNewsSum = weekNews.values().stream().mapToInt(Integer::intValue).sum();
+        return new MyProfileResponseDto(member,weekNewsSum, dailyScoreSum);
+    }
 }

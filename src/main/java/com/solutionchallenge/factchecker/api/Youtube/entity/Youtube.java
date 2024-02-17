@@ -22,7 +22,7 @@ public class Youtube{
     @Column(name = "youtube_news_id", unique = true, nullable = false)
     private Long id;
 
-    private String title;
+    private String yt_title;
     @NotNull
     private String url;
     @Column(name = "created_date")
@@ -54,7 +54,7 @@ public class Youtube{
         this.member = member;
     }
     public void updateKeywordAndUploadDate(String title, String keyword, String upload_date) {
-        this.title = title;
+        this.yt_title = title;
         this.keyword = keyword;
         this.upload_date = upload_date;
     }

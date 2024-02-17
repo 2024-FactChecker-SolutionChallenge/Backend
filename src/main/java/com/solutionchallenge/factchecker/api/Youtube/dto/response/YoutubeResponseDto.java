@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class YoutubeResponseDto {
     private Long id;
-    private String title;
+    private String yt_title;
     private String url;
     private String keyword;
     private String upload_date;
@@ -22,7 +22,7 @@ public class YoutubeResponseDto {
 
     public YoutubeResponseDto(Long id, String title, String url, String keyword, String uploadDate, List<RelatedNewsDto> curr_youtube_news, List<RelatedNewsDto> rel_youtube_news) {
         this.id = id;
-        this.title = title;
+        this.yt_title = title;
         this.url = url;
         this.keyword = keyword;
         this.upload_date = uploadDate;

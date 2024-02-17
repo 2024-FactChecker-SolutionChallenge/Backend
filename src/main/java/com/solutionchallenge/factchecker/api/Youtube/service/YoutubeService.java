@@ -112,6 +112,7 @@ public class YoutubeService {
 
             List<RelatedNewsDto> currYoutubeNews = mlResponse.getCurrYoutubeNews();
             List<RelatedNewsDto> relYoutubeNews = mlResponse.getRelYoutubeNews();
+            //TODO : title 값 잘못 들어오는 문제 해결하기
             String title = mlResponse.getYt_title();
             String keyword = mlResponse.getKeyword();
             String upload_date = mlResponse.getUploadDate();
@@ -164,7 +165,7 @@ public class YoutubeService {
                 .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility()))
                 .collect(Collectors.toList());
 
-        return new YoutubeResponseDto(youtube.getId(), youtube.getTitle(), youtube.getUrl(),youtube.getKeyword(),youtube.getUpload_date(), curr_youtube_news, rel_youtube_news);
+        return new YoutubeResponseDto(youtube.getId(), youtube.getYt_title(), youtube.getUrl(),youtube.getKeyword(),youtube.getUpload_date(), curr_youtube_news, rel_youtube_news);
     }
 
 

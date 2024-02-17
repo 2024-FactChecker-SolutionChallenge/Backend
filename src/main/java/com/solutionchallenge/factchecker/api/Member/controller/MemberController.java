@@ -3,27 +3,28 @@ package com.solutionchallenge.factchecker.api.Member.controller;
 import com.solutionchallenge.factchecker.api.Member.dto.request.LoginRequestDto;
 import com.solutionchallenge.factchecker.api.Member.dto.request.MailConfirmRequest;
 import com.solutionchallenge.factchecker.api.Member.dto.request.SignupRequestDto;
+import com.solutionchallenge.factchecker.api.Member.dto.response.MyProfileResponseDto;
 import com.solutionchallenge.factchecker.api.Member.dto.response.SignupResponseDto;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
+import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.api.Member.service.EmailService;
 import com.solutionchallenge.factchecker.api.Member.service.MemberService;
+import com.solutionchallenge.factchecker.api.Youtube.dto.response.ArticleDetailDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class MemberController {
 
     private final EmailService mailService;
@@ -32,7 +33,7 @@ public class MemberController {
 
 
     @Operation(summary = "이메일 인증", description = "이메일 인증번호 (ePw) 를 입력받은 메일로 전송합니다.")
-    @PostMapping("/confirm")
+    @PostMapping("/auth/confirm")
     public ResponseEntity emailConfirm(@RequestBody MailConfirmRequest dto) throws Exception {
 
         String ePw = mailService.sendEmailAndGenerateCode(dto.email);
@@ -41,7 +42,7 @@ public class MemberController {
         return ResponseEntity.ok(confirmResult);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/auth/signup")
     public ResponseEntity signup(HttpServletResponse res, @RequestBody SignupRequestDto requestDto) throws Exception {
         Map<String, String> result = new HashMap<>();
 
@@ -67,13 +68,13 @@ public class MemberController {
                     .nickname(member.getNickname())
                     .grade(requestDto.getGrade())
                     .interests(requestDto.getInterests())
-//                    .interests(requestDto.getInterests()) //json 형식
+//                   .interests(requestDto.getInterests()) //json 형식
                     .build();
             return ResponseEntity.ok(responseDto);
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity login(HttpServletResponse res, @RequestBody LoginRequestDto dto) throws Exception {
         try {
             return ResponseEntity.ok(memberService.login(res, dto));
@@ -83,5 +84,17 @@ public class MemberController {
             result.put("error", "인증 정보가 잘못되었습니다.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
+    }
+
+    @GetMapping("/analytics")
+    public ResponseEntity<?> getMyProfile(
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
+    ) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+        MyProfileResponseDto dto = memberService.getMyProfile(userDetails.getUsername());
+        return ResponseEntity.ok().body(dto);
     }
 }

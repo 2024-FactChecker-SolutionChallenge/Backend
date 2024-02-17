@@ -3,6 +3,7 @@ import com.solutionchallenge.factchecker.global.entity.BaseTimeEntity;
 import com.sun.istack.NotNull;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -28,11 +29,17 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private String password;
     private String nickname;
+    private int bonusScore;
 
     @Column(name = "grade")
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private Grade grade;
+
+    @Column(name = "tier")
+    @NotNull
+    @Enumerated(EnumType.ORDINAL)
+    private Tier tier;
 
     @Type(type = "json")
     @Column(columnDefinition = "json")
@@ -42,6 +49,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Type(type = "json")
     private Map<String, Integer> dailyScore= new HashMap<>();
 
+    @Column(columnDefinition = "json")
+    @Type(type = "json")
+    private Map<String, Integer> weekNews= new HashMap<>();
+
     @Column(name = "selected_interests")
     private String selectedInterests;
 
@@ -49,7 +60,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private int left_opportunity;
     // 회원가입용
     @Builder
-    public Member(String id, String password, String nickname, Grade grade , Map<String , String> interests, int left_opportunity) {
+    public Member(String id, String password, String nickname, Grade grade , Map<String , String> interests) {
         this.id = id;
         this.password = password;
         this.nickname = nickname;
@@ -64,7 +75,18 @@ public class Member extends BaseTimeEntity implements UserDetails {
                 "토", 0,
                 "일", 0
         );
+        this.weekNews = Map.of(
+                "월", 0,
+                "화", 0,
+                "수", 0,
+                "목", 0,
+                "금", 0,
+                "토", 0,
+                "일", 0
+        );
         this.left_opportunity = 1;
+        this.tier = Tier.SEED;
+        this.bonusScore = 0;
       }
 
 
