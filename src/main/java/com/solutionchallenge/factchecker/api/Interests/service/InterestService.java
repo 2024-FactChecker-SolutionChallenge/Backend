@@ -1,12 +1,8 @@
 package com.solutionchallenge.factchecker.api.Interests.service;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solutionchallenge.factchecker.api.Interests.dto.request.SelectedInterestsRequestDto;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestArticleResponseDto;
-import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestResponseDto;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.MLResponseDto;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.SelectedInterestsResponseDto;
 import com.solutionchallenge.factchecker.api.Interests.entity.Interest;
@@ -15,20 +11,17 @@ import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 
 import com.solutionchallenge.factchecker.global.exception.CustomException;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.util.retry.Retry;
 
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +41,7 @@ public class InterestService {
         this.interestRepository = interestRepository;
 
         HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofMinutes(5));
+                .responseTimeout(Duration.ofMinutes(10));
 
         this.webClient = webClientBuilder.baseUrl("http://34.22.87.117:5000")
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
@@ -113,9 +106,20 @@ public class InterestService {
     private Mono<List<MLResponseDto>> fetchDataFromMLServer() {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/interests").build())
-                .retrieve() // exchangeToMono 대신 retrieve 사용
-                .bodyToMono(new ParameterizedTypeReference<List<MLResponseDto>>() {});
+                .retrieve()
+                // 에러 상태 코드 처리
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new CustomException("Client error, incorrect request")))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new CustomException("Server error, retrying...")))
+                // 성공 응답 처리
+                .bodyToMono(new ParameterizedTypeReference<List<MLResponseDto>>() {})
+                .retryWhen(Retry.max(2)
+                        .filter(throwable -> throwable instanceof CustomException && throwable.getMessage().contains("retrying")))
+                .onErrorResume(e -> {
+                    log.error("After retries or timeout, processing failed: {}", e.getMessage());
+                    return Mono.error(new CustomException("ML 서버의 트래픽이 너무 많거나 답을 응답하는데 너무 오래걸립니다. 재요청해주세요"));
+                });
     }
+
     private Interest convertDtoToEntity(MLResponseDto dto) {
         Interest interest = new Interest();
         interest.setTitle(dto.getTitle());
