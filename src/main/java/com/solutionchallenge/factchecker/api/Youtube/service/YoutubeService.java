@@ -84,11 +84,9 @@ public class YoutubeService {
                         return Mono.error(new CustomException("Unexpected response status: " + response.statusCode()));
                     }
                 })
-                .retryWhen(Retry.max(5)
-                        .filter(throwable -> throwable instanceof CustomException && throwable.getMessage().contains("retrying")))
                 .onErrorResume(e -> {
                     log.error("After retries or timeout, processing failed: {}", e.getMessage());
-                    return Mono.error(new CustomException("재시도 횟수를 다 사용했습니다. ML 서버의 트래픽이 너무 많거나 응답 시간이 너무 깁니다. 재요청해주세요"));
+                    return Mono.error(new CustomException("ML 서버의 트래픽이 너무 많거나 처리할 수 없는 url 입니다. 재요청해주세요"));
                 });
     }
 
