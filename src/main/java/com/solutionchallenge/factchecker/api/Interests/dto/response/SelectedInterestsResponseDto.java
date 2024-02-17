@@ -13,4 +13,5 @@ import java.util.Map;
 public class SelectedInterestsResponseDto {
     private String memberId;
     private String selectedInterests;
+
 }
