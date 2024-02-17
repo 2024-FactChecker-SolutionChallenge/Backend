@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 public class MyProfileResponseDto {
+    private String nickname;
     private Tier tier;
     private int weekly_total_read;
     private int weekly_read_goal;
@@ -30,6 +31,7 @@ public class MyProfileResponseDto {
             this.weekly_read_goal = 15;
             this.weekly_quiz_goal = 60;
         }
+        this.nickname = member.getNickname();
         this.tier =  member.getTier();
         this.weekly_total_read = weekNews;
         this.weekly_total_quiz = dailyScore;
