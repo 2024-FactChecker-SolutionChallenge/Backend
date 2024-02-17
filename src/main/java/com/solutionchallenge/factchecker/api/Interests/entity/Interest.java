@@ -45,7 +45,7 @@ public class Interest {
         this.credibility = credibility;
     }
 
-    public void setSection(float credibility) {
+    public void setSection(int section) {
         this.section = section;
     }
 
