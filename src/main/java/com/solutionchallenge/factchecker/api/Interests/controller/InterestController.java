@@ -44,7 +44,7 @@ public class InterestController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = InterestArticleResponseDto.class))))
             })
     @GetMapping("/getarticle")
-    public ResponseEntity<List<InterestArticleResponseDto>> getInterestArticles(
+    public ResponseEntity<List<InterestArticleResponseDto>> getAllInterestArticles(
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
             @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -53,4 +53,17 @@ public class InterestController {
         List<InterestArticleResponseDto> dtos = interestService.getArticles(userDetails.getUsername());
         return ResponseEntity.ok(dtos);
     }
+
+    @GetMapping("/getarticleBySection")
+    public ResponseEntity<List<InterestArticleResponseDto>> getInterestArticlesBySection(
+            @RequestParam(name = "section") int section,
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+        List<InterestArticleResponseDto> dtos = interestService.getArticlesBySection(userDetails.getUsername(), section);
+        return ResponseEntity.ok(dtos);
+    }
+
 }

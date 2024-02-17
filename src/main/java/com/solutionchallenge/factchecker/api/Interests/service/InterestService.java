@@ -92,6 +92,8 @@ public class InterestService {
         return dtos;
     }
 
+
+
     @Transactional
     public void saveInterestsFromMLResponse() {
         // fetchDataFromMLServer()가 Mono<List<MLResponseDto>> 대신 List<MLResponseDto>를 반환한다고 가정
@@ -143,6 +145,18 @@ public class InterestService {
         return dto;
     }
 
+
+    public List<InterestArticleResponseDto> getArticlesBySection(String memberId, int section) {
+        // DB에서 해당 섹션의 Interest 엔티티를 조회
+        List<Interest> interests = interestRepository.findBySection(section);
+
+        // 조회된 Interest 엔티티 리스트를 InterestArticleResponseDto 리스트로 변환
+        List<InterestArticleResponseDto> dtos = interests.stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        return dtos;
+    }
 //    @Transactional
 //    public List<InterestArticleResponseDto> getInterestArticles() {
 //        // ml 서버로부터 기사 목록을 가져오는 요청
