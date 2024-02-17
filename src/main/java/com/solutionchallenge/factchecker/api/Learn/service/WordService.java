@@ -1,14 +1,19 @@
 package com.solutionchallenge.factchecker.api.Learn.service;
+import java.sql.Timestamp;
 
+import com.solutionchallenge.factchecker.api.Learn.dto.request.ArticleWordRequestDto;
+import com.solutionchallenge.factchecker.api.Member.entity.Member;
+import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.global.exception.CustomException;
 import com.solutionchallenge.factchecker.api.Learn.entity.Word;
 import com.solutionchallenge.factchecker.api.Learn.repository.WordRepository;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.WordResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,11 +22,14 @@ import java.util.stream.Collectors;
 @Service
 public class WordService {
     private final WordRepository wordRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public WordService(WordRepository wordRepository) {
+    public WordService(WordRepository wordRepository, MemberRepository memberRepository) {
         this.wordRepository = wordRepository;
+        this.memberRepository = memberRepository; // Assigning the memberRepository
     }
+
 
     public List<WordResponseDto> getWordList(String member_id) {
         List<Word> words = wordRepository.findAllByMemberIdOrderByCreatedDateDesc(member_id);
@@ -54,4 +62,25 @@ public class WordService {
 
 
     }
+    @Transactional
+    public void saveWord(String memberId, ArticleWordRequestDto articleWordResponse) {
+        // Get the current timestamp
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+
+        Word word = Word.builder()
+                .word(articleWordResponse.getWord())
+                .mean(articleWordResponse.getMean())
+                .knowStatus(false)
+                .createdDate(now) // Use the current timestamp
+                .modifiedDate(now) // Use the current timestamp
+                .build();
+
+        wordRepository.save(word);
+    }
+
+
+
 }
