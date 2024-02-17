@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RelatedNewsDto {
-    private  Long id;
+    private Long id;
     private String title;
     private String article;
     private String date;

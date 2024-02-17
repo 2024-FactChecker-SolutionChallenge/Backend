@@ -50,25 +50,15 @@ public class YoutubeService {
         if (existingYoutube.isPresent()) {
             throw new CustomException("url already processed.");
         }
-        Member member = memberRepository.findMemberById(member_id).orElseThrow(() -> new CustomException("User not found"));
-        Timestamp now = new Timestamp(System.currentTimeMillis());
 
-        Youtube youtube = Youtube.builder()
-                .createdDate(now)
-                .modifiedDate(now)
-                .member(member)
-                .url(url)
-                .build();
-
-        Youtube savedyoutube = youtubeRepository.save(youtube);
 
         // ML 서버에 URL 처리 요청
-        sendUrlToMlServer(savedyoutube, savedyoutube.getUrl()).block();
+        sendUrlToMlServer(member_id, url).block();
         return new YoutubeSuccessDto(member_id, url);
     }
 
 
-    private Mono<MLResponseDto> sendUrlToMlServer(Youtube youtube, String url) {
+    private Mono<MLResponseDto> sendUrlToMlServer(String member_id,  String url) {
         return webClient.post()
                 .uri("/youtubeNews/related")
                 .bodyValue(Collections.singletonMap("url", url))
@@ -78,7 +68,7 @@ public class YoutubeService {
                         return response.bodyToMono(String.class)
                                 .flatMap(body -> {
                                     try {
-                                        return handleMlServerResponse(youtube, body);
+                                        return handleMlServerResponse(member_id, url, body);
                                     } catch (JsonProcessingException e) {
                                         return Mono.error(new RuntimeException(e));
                                     }
@@ -97,17 +87,26 @@ public class YoutubeService {
                 .retryWhen(Retry.max(5)
                         .filter(throwable -> throwable instanceof CustomException && throwable.getMessage().contains("retrying")))
                 .onErrorResume(e -> {
-                    if (e instanceof CustomException && (e.getMessage().contains("Client error") || e.getMessage().contains("retrying"))) {
-                        youtubeRepository.deleteByUrlAndMember(url,youtube.getMember()); // 비동기 삭제 실행
-                    }
                     log.error("After retries or timeout, processing failed: {}", e.getMessage());
                     return Mono.error(new CustomException("재시도 횟수를 다 사용했습니다. ML 서버의 트래픽이 너무 많거나 응답 시간이 너무 깁니다. 재요청해주세요"));
                 });
     }
 
 
-    private Mono<MLResponseDto> handleMlServerResponse(Youtube youtube, String response) throws JsonProcessingException {
+    private Mono<MLResponseDto> handleMlServerResponse(String member_id, String url, String response) throws JsonProcessingException {
         return Mono.fromCallable(() -> {
+            Member member = memberRepository.findMemberById(member_id).orElseThrow(() -> new CustomException("User not found"));
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+
+            Youtube youtube = Youtube.builder()
+                    .createdDate(now)
+                    .modifiedDate(now)
+                    .member(member)
+                    .url(url)
+                    .build();
+
+            Youtube savedyoutube = youtubeRepository.save(youtube);
+
             ObjectMapper objectMapper = new ObjectMapper();
             MLResponseDto mlResponse = objectMapper.readValue(response, MLResponseDto.class);
 
@@ -117,10 +116,8 @@ public class YoutubeService {
             String keyword = mlResponse.getKeyword();
             String upload_date = mlResponse.getUploadDate();
 
-            Youtube myyoutube = youtubeRepository.findByIdAndMember(youtube.getId(),youtube.getMember() )
-                    .orElseThrow(() -> new CustomException("YoutubeNews not found: " + youtube.getId()));
-            myyoutube.updateKeywordAndUploadDate(title, keyword, upload_date);
-            Youtube updatedyoutube = youtubeRepository.save(myyoutube);
+            savedyoutube.updateKeywordAndUploadDate(title, keyword, upload_date);
+            Youtube updatedyoutube = youtubeRepository.save(savedyoutube);
             currYoutubeNews.forEach(newsDto -> saveRelatedNews(newsDto, Category.LATEST, updatedyoutube));
             relYoutubeNews.forEach(newsDto -> saveRelatedNews(newsDto, Category.RELATED, updatedyoutube));
 
@@ -160,7 +157,6 @@ public class YoutubeService {
         List<RelatedNewsDto> relatedNewsDtos = youtube.getRelatedNews().stream()
                 .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility(),news.getCategory()))
                 .collect(Collectors.toList());
-        log.info("[youtube  타이틀은 다음과 같다: ", youtube.getTitle());
         return new YoutubeResponseDto(youtube.getId(), youtube.getTitle(), youtube.getUrl(), relatedNewsDtos);
     }
 

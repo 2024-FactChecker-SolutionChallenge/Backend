@@ -4,6 +4,7 @@ import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
@@ -45,7 +46,7 @@ public class Youtube{
     private List<RelatedNews> relatedNews = new ArrayList<>();
 
     @Builder
-    public Youtube(Long id, @NotNull String url, @NotNull Timestamp createdDate, @NotNull Timestamp modifiedDate, Member member) {
+    public Youtube(Long id, @NotNull String url, @NotNull Timestamp createdDate, @NotNull Timestamp modifiedDate,Member member) {
         this.id = id;
         this.url = url;
         this.createdDate = createdDate;
