@@ -3,11 +3,8 @@ package com.solutionchallenge.factchecker.api.Interests.controller;
 import com.solutionchallenge.factchecker.api.Interests.dto.request.SelectedInterestsRequestDto;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestArticleResponseDto;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.SelectedInterestsResponseDto;
-import com.solutionchallenge.factchecker.api.Interests.entity.Interest;
 import com.solutionchallenge.factchecker.api.Interests.service.InterestService;
 import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
-import com.solutionchallenge.factchecker.api.Youtube.dto.response.YoutubeResponseDto;
-import com.solutionchallenge.factchecker.api.Youtube.dto.response.YoutubeSuccessDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,5 +53,4 @@ public class InterestController {
         List<InterestArticleResponseDto> dtos = interestService.getArticles(userDetails.getUsername());
         return ResponseEntity.ok(dtos);
     }
-
 }

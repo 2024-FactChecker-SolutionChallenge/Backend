@@ -85,6 +85,7 @@ public class InterestService {
                 .build();
     }
     public List<InterestArticleResponseDto> getArticles(String memberId) {
+        interestRepository.deleteAll();
         //1. ML에서 전체 기사 데이터 받아오기 MLResponseDTO로 매핑해서 가지고 있기./ DTo를 Entity로 매핑해서 DB에 저장하기
         saveInterestsFromMLResponse();
         // DB에서 모든 Interest 엔티티를 조회
@@ -96,7 +97,6 @@ public class InterestService {
                 .collect(Collectors.toList());
         //FE로 반환
         return dtos;
-
     }
 
     @Transactional
