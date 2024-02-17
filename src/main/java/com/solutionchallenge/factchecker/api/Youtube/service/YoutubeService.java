@@ -159,4 +159,24 @@ public class YoutubeService {
                 .collect(Collectors.toList());
         return new YoutubeResponseDto(youtube.getId(), youtube.getTitle(), youtube.getUrl(), relatedNewsDtos);
     }
+
+
+
+    public ArticleDetailDto getArticleDetail(Long articleId, String memberId) {
+        Optional<RelatedNews> relatedNewsOptional = relatedNewsRepository.findById(articleId);
+        if (relatedNewsOptional.isEmpty()) {
+            throw new CustomException("Related news not found with ID: " + articleId);
+        }
+
+        RelatedNews relatedNews = relatedNewsOptional.get();
+        if (!relatedNews.getYoutube().getMember().getId().equals(memberId)) {
+            throw new CustomException("You are not authorized to access this article.");
+        }
+
+        return new ArticleDetailDto(relatedNews.getTitle(), relatedNews.getArticle());
+    }
+
+
+
+
 }
