@@ -10,7 +10,7 @@ import java.util.List;
 public class MLResponseDto {
 
     @JsonProperty("yt_title")
-    private String title;
+    private String yt_title;
     @JsonProperty("upload_date")
     private String uploadDate;
     @JsonProperty("keyword")
