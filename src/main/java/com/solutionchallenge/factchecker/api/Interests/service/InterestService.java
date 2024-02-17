@@ -1,4 +1,6 @@
 package com.solutionchallenge.factchecker.api.Interests.service;
+import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestArticleDetailDto;
+import com.solutionchallenge.factchecker.api.Interests.exception.ArticleNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.solutionchallenge.factchecker.api.Interests.dto.request.SelectedInterestsRequestDto;
@@ -157,21 +159,15 @@ public class InterestService {
 
         return dtos;
     }
-//    @Transactional
-//    public List<InterestArticleResponseDto> getInterestArticles() {
-//        // ml 서버로부터 기사 목록을 가져오는 요청
-//        ResponseEntity<InterestArticleResponseDto[]> responseEntity = webClient.get()
-//                .uri("/interests")
-//                .retrieve()
-//                .toEntity(InterestArticleResponseDto[].class)
-//                .block();
-//
-//        // 가져온 기사 목록을 배열에서 리스트로 변환하여 반환
-//        if (responseEntity != null && responseEntity.getBody() != null) {
-//            return Arrays.asList(responseEntity.getBody());
-//        } else {
-//            throw new RuntimeException("Failed to retrieve interest articles.");
-//        }
-//    }
 
+    public InterestArticleDetailDto getInterestArticleDetailDto(Long articleId) {
+        Optional<Interest> interestOptional = interestRepository.findById(articleId);
+        if (interestOptional.isEmpty()) {
+            throw new ArticleNotFoundException("해당 기사를 찾을 수 없습니다.");
+        }
+        Interest interest = interestOptional.get();
+
+
+        return new InterestArticleDetailDto(interest.getTitle(), interest.getArticle());
+    }
 }
