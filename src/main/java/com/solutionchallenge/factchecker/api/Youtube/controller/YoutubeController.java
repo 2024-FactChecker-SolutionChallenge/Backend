@@ -22,7 +22,7 @@ import java.util.List;
 @Tag(name= "Youtube Controller", description = "유튜브영상뉴스 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/YoutubeNews")
 @Slf4j
 public class YoutubeController {
     private final YoutubeService youtubeService;
@@ -31,7 +31,7 @@ public class YoutubeController {
             responses = {@ApiResponse(responseCode = "200", description = "유튜브주소가 성공적으로 저장되었습니다.",
                     content = @Content(schema = @Schema(implementation = YoutubeSuccessDto.class)))
             })
-    @PostMapping("/youtubeNews/add")
+    @PostMapping("/add")
     public ResponseEntity<?> addYoutubeNewsURl(
             @RequestBody YoutubeURLRequestDto youtubeURLRequestDto,
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
@@ -48,7 +48,7 @@ public class YoutubeController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = YoutubeResponseDto.class))))
             })
 
-    @GetMapping("/YoutubeNews/getarticles")
+    @GetMapping("/getarticles")
     public ResponseEntity<?> getYoutubeNews(
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
             @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
@@ -66,7 +66,7 @@ public class YoutubeController {
             })
 
 
-    @GetMapping("/YoutubeNews/getarticle/{id}")
+    @GetMapping("/getarticle/{id}")
     public ResponseEntity<?> getArticleDetail(
             @PathVariable("id") Long articleId,
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
