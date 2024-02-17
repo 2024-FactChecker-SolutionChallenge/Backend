@@ -1,10 +1,12 @@
 package com.solutionchallenge.factchecker.api.Interests.controller;
 
 import com.solutionchallenge.factchecker.api.Interests.dto.request.SelectedInterestsRequestDto;
+import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestArticleDetailDto;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestArticleResponseDto;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.SelectedInterestsResponseDto;
 import com.solutionchallenge.factchecker.api.Interests.service.InterestService;
 import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
+import com.solutionchallenge.factchecker.api.Youtube.dto.response.ArticleDetailDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -65,5 +67,20 @@ public class InterestController {
         List<InterestArticleResponseDto> dtos = interestService.getArticlesBySection(userDetails.getUsername(), section);
         return ResponseEntity.ok(dtos);
     }
+
+    @GetMapping("/getarticle/{id}")
+    public ResponseEntity<?> getArticleDetail(
+            @PathVariable("id") Long articleId,
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
+    ) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+        InterestArticleDetailDto interestarticleDetail = interestService.getInterestArticleDetailDto(articleId);
+        return ResponseEntity.ok().body(interestarticleDetail);
+    }
+
+
 
 }
