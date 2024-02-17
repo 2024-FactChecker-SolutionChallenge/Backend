@@ -1,11 +1,15 @@
 package com.solutionchallenge.factchecker.api.Learn.controller;
 
+import com.solutionchallenge.factchecker.api.Learn.dto.request.ArticleWordRequestDto;
+import com.solutionchallenge.factchecker.api.Learn.dto.response.ArticleWordResponse;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.ChallengeQuizResponseDto;
+import com.solutionchallenge.factchecker.api.Learn.service.WordService;
 import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.DailyQuizScoreResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.WordResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.request.DailyQuizRequestDto;
 import com.solutionchallenge.factchecker.api.Learn.service.LearnService;
+import com.solutionchallenge.factchecker.global.dto.response.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,7 +22,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name= "Learn Controller", description = "단어퀴즈 페이지 API")
 @RestController
@@ -27,6 +34,37 @@ import java.util.List;
 @Slf4j
 public class LearnController {
     private final LearnService learnService;
+    private final WordService wordService;
+
+
+    @PostMapping("/learn/word")
+    public ResponseEntity<Map<String, Object>> saveWord(
+            @RequestBody ArticleWordRequestDto articleWordRequestDto,
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
+    ) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+        String memberId = userDetails.getUsername();
+
+        // Transform ArticleWordRequestDto to ArticleWordResponse
+        ArticleWordResponse articleWordResponse = new ArticleWordResponse();
+        articleWordResponse.setWord(articleWordRequestDto.getWord());
+        articleWordResponse.setMean(articleWordRequestDto.getMean());
+
+        // Save the word
+        wordService.saveWord(memberId, articleWordRequestDto);
+
+        // Build the response
+        Map<String, Object> response = new HashMap<>();
+        response.put("isSuccess", true);
+        response.put("code", HttpStatus.CREATED.value());
+        response.put("message", "요청에 성공했습니다.");
+        response.put("data", articleWordResponse);
+
+        // Return the response with appropriate status code
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
     @Operation(summary = "단어장 - 단어 리스트 조회", description = "단어장에 올릴 단어들을 조회합니다. 이때 생성일 기준 최신순으로 정렬해서 가져옵니다.",
             responses = {@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = WordResponseDto.class))))})
