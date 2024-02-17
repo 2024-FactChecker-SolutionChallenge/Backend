@@ -16,14 +16,12 @@ public class RelatedNewsDto {
     private String article;
     private String date;
     private float credibility;
-    private Category category;
 
-    public RelatedNewsDto(Long id, String title, String article, String date, float credibility, Category category) {
+    public RelatedNewsDto(Long id, String title, String article, String date, float credibility) {
         this.id = id;
         this.title = title;
         this.article = article;
         this.date = date;
         this.credibility = credibility;
-        this.category = category;
     }
 }

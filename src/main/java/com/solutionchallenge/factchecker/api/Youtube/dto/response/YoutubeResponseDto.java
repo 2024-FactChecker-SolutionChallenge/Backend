@@ -13,14 +13,20 @@ public class YoutubeResponseDto {
     private Long id;
     private String title;
     private String url;
+    private String keyword;
+    private String upload_date;
     private final boolean show= false;
     private final boolean loadingStatus=false;
-    private List<RelatedNewsDto> relatedNews;
+    private List<RelatedNewsDto> curr_youtube_news;
+    private List<RelatedNewsDto> rel_youtube_news;
 
-    public YoutubeResponseDto(Long id, String title, String url, List<RelatedNewsDto> relatedNews) {
+    public YoutubeResponseDto(Long id, String title, String url, String keyword, String uploadDate, List<RelatedNewsDto> curr_youtube_news, List<RelatedNewsDto> rel_youtube_news) {
         this.id = id;
         this.title = title;
         this.url = url;
-        this.relatedNews = relatedNews;
+        this.keyword = keyword;
+        this.upload_date = uploadDate;
+        this.curr_youtube_news = curr_youtube_news;
+        this.rel_youtube_news  = rel_youtube_news;
     }
 }

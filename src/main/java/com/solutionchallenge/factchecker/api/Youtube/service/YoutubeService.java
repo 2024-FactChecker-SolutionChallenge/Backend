@@ -154,9 +154,16 @@ public class YoutubeService {
 
     @Transactional
     public YoutubeResponseDto convertToDto(Youtube youtube) {
-        List<RelatedNewsDto> relatedNewsDtos = youtube.getRelatedNews().stream()
-                .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility(),news.getCategory()))
+        List<RelatedNewsDto> curr_youtube_news = youtube.getRelatedNews().stream()
+                .filter(news -> news.getCategory() == Category.LATEST) // 'LATEST' 카테고리 필터링
+                .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility()))
                 .collect(Collectors.toList());
-        return new YoutubeResponseDto(youtube.getId(), youtube.getTitle(), youtube.getUrl(), relatedNewsDtos);
+
+        List<RelatedNewsDto> rel_youtube_news = youtube.getRelatedNews().stream()
+                .filter(news -> news.getCategory() == Category.RELATED) // 'RELATED' 카테고리 필터링
+                .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility()))
+                .collect(Collectors.toList());
+
+        return new YoutubeResponseDto(youtube.getId(), youtube.getTitle(), youtube.getUrl(),youtube.getKeyword(),youtube.getUpload_date(), curr_youtube_news, rel_youtube_news);
     }
 }
