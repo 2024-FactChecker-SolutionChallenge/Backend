@@ -43,7 +43,7 @@ public class InterestService {
         this.interestRepository = interestRepository;
 
         HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofMinutes(10));
+                .responseTimeout(Duration.ofMinutes(5));
 
         this.webClient = webClientBuilder.baseUrl("http://34.22.87.117:5000")
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
@@ -116,7 +116,7 @@ public class InterestService {
                 .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new CustomException("Server error, retrying...")))
                 // 성공 응답 처리
                 .bodyToMono(new ParameterizedTypeReference<List<MLResponseDto>>() {})
-                .retryWhen(Retry.max(2)
+                .retryWhen(Retry.max(5)
                         .filter(throwable -> throwable instanceof CustomException && throwable.getMessage().contains("retrying")))
                 .onErrorResume(e -> {
                     log.error("After retries or timeout, processing failed: {}", e.getMessage());
