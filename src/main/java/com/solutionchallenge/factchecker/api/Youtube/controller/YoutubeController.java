@@ -2,6 +2,7 @@ package com.solutionchallenge.factchecker.api.Youtube.controller;
 
 import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
 import com.solutionchallenge.factchecker.api.Youtube.dto.request.YoutubeURLRequestDto;
+import com.solutionchallenge.factchecker.api.Youtube.dto.response.ArticleDetailDto;
 import com.solutionchallenge.factchecker.api.Youtube.dto.response.YoutubeResponseDto;
 import com.solutionchallenge.factchecker.api.Youtube.dto.response.YoutubeSuccessDto;
 import com.solutionchallenge.factchecker.api.Youtube.service.YoutubeService;
@@ -46,6 +47,7 @@ public class YoutubeController {
             responses = {@ApiResponse(responseCode = "200", description = "유튜브-관련기사 쌍을 성공적으로 조회했습니다.",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = YoutubeResponseDto.class))))
             })
+
     @GetMapping("/YoutubeNews/getarticles")
     public ResponseEntity<?> getYoutubeNews(
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
@@ -57,4 +59,24 @@ public class YoutubeController {
         List<YoutubeResponseDto> Dtos = youtubeService.fetchYoutubeNews(userDetails.getUsername());
         return ResponseEntity.ok().body(Dtos);
     }
+
+    @Operation(summary = "팩트체크 페이지 - 기사 상세 조회", description = "특정 기사의 내용과 제목을 가져옵니다.",
+            responses = {@ApiResponse(responseCode = "200", description = "기사 내용과 제목을 성공적으로 조회했습니다.",
+                    content = @Content(schema = @Schema(implementation = ArticleDetailDto.class)))
+            })
+
+
+    @GetMapping("/YoutubeNews/getarticle/{id}")
+    public ResponseEntity<?> getArticleDetail(
+            @PathVariable("id") Long articleId,
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
+    ) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+        ArticleDetailDto articleDetail = youtubeService.getArticleDetail(articleId, userDetails.getUsername());
+        return ResponseEntity.ok().body(articleDetail);
+    }
+
 }

@@ -158,9 +158,29 @@ public class YoutubeService {
     @Transactional
     public YoutubeResponseDto convertToDto(Youtube youtube) {
         List<RelatedNewsDto> relatedNewsDtos = youtube.getRelatedNews().stream()
-                .map(news -> new RelatedNewsDto(news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility(),news.getCategory()))
+                .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility(),news.getCategory()))
                 .collect(Collectors.toList());
         log.info("[youtube  타이틀은 다음과 같다: ", youtube.getTitle());
         return new YoutubeResponseDto(youtube.getId(), youtube.getTitle(), youtube.getUrl(), relatedNewsDtos);
     }
+
+
+
+    public ArticleDetailDto getArticleDetail(Long articleId, String memberId) {
+        Optional<RelatedNews> relatedNewsOptional = relatedNewsRepository.findById(articleId);
+        if (relatedNewsOptional.isEmpty()) {
+            throw new CustomException("Related news not found with ID: " + articleId);
+        }
+
+        RelatedNews relatedNews = relatedNewsOptional.get();
+        if (!relatedNews.getYoutube().getMember().getId().equals(memberId)) {
+            throw new CustomException("You are not authorized to access this article.");
+        }
+
+        return new ArticleDetailDto(relatedNews.getTitle(), relatedNews.getArticle());
+    }
+
+
+
+
 }
