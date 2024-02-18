@@ -73,7 +73,7 @@ public class InterestController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl) principal;
 
-        List<InterestArticleResponseDto> dtos = interestService.getArticlesBySection(userDetails.getUsername(), section);
+        List<InterestArticleResponseDto> dtos = interestService.getArticlesBySection(section);
         return ResponseEntity.ok(dtos);
     }
 

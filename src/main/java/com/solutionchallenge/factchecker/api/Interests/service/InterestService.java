@@ -153,13 +153,13 @@ public class InterestService {
     }
 
 
-    public List<InterestArticleResponseDto> getArticlesBySection(String memberId, int section) {
+    public List<InterestArticleResponseDto> getArticlesBySection(int section) {
         // DB에서 해당 섹션의 Interest 엔티티를 조회
         List<Interest> interests = interestRepository.findBySection(section);
 
         // 조회된 Interest 엔티티 리스트를 InterestArticleResponseDto 리스트로 변환
         List<InterestArticleResponseDto> dtos = interests.stream()
-                .map(this::convertEntityToDto)
+                .map(this::convertEntityToDtoBySection)
                 .collect(Collectors.toList());
 
         return dtos;
@@ -174,5 +174,17 @@ public class InterestService {
 
 
         return new InterestArticleDetailDto(interest.getTitle(), interest.getArticle());
+    }
+
+    private InterestArticleResponseDto convertEntityToDtoBySection(Interest interest) {
+        // Interest 엔티티를 InterestArticleResponseDto로 변환하는 로직
+        InterestArticleResponseDto dto = new InterestArticleResponseDto();
+        dto.setId(interest.getId());
+        dto.setTitle(interest.getTitle());
+        dto.setArticle(interest.getArticle());
+        dto.setDate(interest.getDate());
+        dto.setCredibility(interest.getCredibility());
+        dto.setSection(99);
+        return dto;
     }
 }

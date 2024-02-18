@@ -32,6 +32,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private int bonusScore;
 
     @Column(name = "grade")
+    @ColumnDefault("0")
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private Grade grade;
