@@ -31,8 +31,7 @@ public class InterestController {
     @GetMapping("/selected")
     public ResponseEntity<List<String>> getSelectedInterests(
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
-            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN,
-            @PathVariable String memberId) {
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl) principal;
 
@@ -62,7 +61,7 @@ public class InterestController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetailsImpl userDetails = (UserDetailsImpl) principal;
 
-        List<InterestArticleResponseDto> dtos = interestService.getArticles(userDetails.getUsername());
+        List<InterestArticleResponseDto> dtos = interestService.getArticles();
         return ResponseEntity.ok(dtos);
     }
 

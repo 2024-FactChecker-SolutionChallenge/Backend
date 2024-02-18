@@ -57,15 +57,11 @@ public class InterestService {
 
     // 회원가입 시 선택한 키워드를 가져오는 메서드
     public List<String> getSelectedInterests(String memberId) {
-        Optional<Member> memberOptional = memberRepository.findMemberById(memberId);
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            // 사용자의 선택한 키워드가 저장된 Map에서 값들만 추출하여 List로 변환
-            List<String> selectedInterests = new ArrayList<>(member.getInterests().values());
-            return selectedInterests;
-        } else {
-            throw new RuntimeException("Member not found with id: " + memberId);
-        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+        // 사용자의 선택한 키워드가 저장된 Map에서 값들만 추출하여 List로 변환
+        List<String> selectedInterests = new ArrayList<>(member.getInterests().values());
+        return selectedInterests;
     }
 
     // 클라이언트가 선택한 키워드를 저장하는 메서드
@@ -84,7 +80,7 @@ public class InterestService {
                 .selectedInterests(updatedSelectedInterests)
                 .build();
     }
-    public List<InterestArticleResponseDto> getArticles(String memberId) {
+    public List<InterestArticleResponseDto> getArticles() {
         // DB에서 모든 Interest 엔티티를 조회
         List<Interest> interests = interestRepository.findAll();
 
