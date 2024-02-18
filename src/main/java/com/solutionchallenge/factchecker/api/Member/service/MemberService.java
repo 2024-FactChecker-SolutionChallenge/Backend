@@ -105,4 +105,24 @@ public class MemberService {
         int weekNewsSum = weekNews.values().stream().mapToInt(Integer::intValue).sum();
         return new MyProfileResponseDto(member,weekNewsSum, dailyScoreSum);
     }
+
+//Scheduler 루틴 메소드들
+    @Transactional
+    public void resetWeeklyData() {
+        memberRepository.findAll().forEach(member -> {
+            member.resetWeekNews();
+            member.resetDailyScore();
+            memberRepository.save(member);
+        });
+        log.info("모든 멤버의 주간 뉴스 조회와 데일리 퀴즈 점수가 초기화되었습니다.");
+    }
+
+    @Transactional
+    public void resetDailyOpportunities() {
+        memberRepository.findAll().forEach(member -> {
+            member.setLeftOpportunities(1);
+            memberRepository.save(member);
+        });
+        log.info("모든 멤버의 데일리 퀴즈 도전 기회가 초기화되었습니다.");
+    }
 }
