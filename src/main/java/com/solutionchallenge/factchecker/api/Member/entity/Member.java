@@ -139,4 +139,32 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void consumeLeftOpportunities() {
         this.left_opportunity -= 1;
     }
+
+    public void resetWeekNews() {
+        this.weekNews = Map.of(
+                "월", 0,
+                "화", 0,
+                "수", 0,
+                "목", 0,
+                "금", 0,
+                "토", 0,
+                "일", 0
+        );
+    }
+
+    public void resetDailyScore() {
+        this.dailyScore = Map.of(
+                "월", 0,
+                "화", 0,
+                "수", 0,
+                "목", 0,
+                "금", 0,
+                "토", 0,
+                "일", 0
+        );
+    }
+
+    public void setLeftOpportunities(int i) {
+        this.left_opportunity = 1;
+    }
 }

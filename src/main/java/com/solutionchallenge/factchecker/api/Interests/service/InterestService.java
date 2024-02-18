@@ -1,6 +1,7 @@
 package com.solutionchallenge.factchecker.api.Interests.service;
 import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestArticleDetailDto;
 import com.solutionchallenge.factchecker.api.Interests.exception.ArticleNotFoundException;
+import org.jetbrains.annotations.Async;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.solutionchallenge.factchecker.api.Interests.dto.request.SelectedInterestsRequestDto;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -86,9 +88,6 @@ public class InterestService {
                 .build();
     }
     public List<InterestArticleResponseDto> getArticles(String memberId) {
-        interestRepository.deleteAll();
-        //1. ML에서 전체 기사 데이터 받아오기 MLResponseDTO로 매핑해서 가지고 있기./ DTo를 Entity로 매핑해서 DB에 저장하기
-        saveInterestsFromMLResponse();
         // DB에서 모든 Interest 엔티티를 조회
         List<Interest> interests = interestRepository.findAll();
 
@@ -100,7 +99,10 @@ public class InterestService {
         return dtos;
     }
 
-
+    public void updateArticles(){
+        interestRepository.deleteAll();
+        saveInterestsFromMLResponse();
+    }
 
     @Transactional
     public void saveInterestsFromMLResponse() {

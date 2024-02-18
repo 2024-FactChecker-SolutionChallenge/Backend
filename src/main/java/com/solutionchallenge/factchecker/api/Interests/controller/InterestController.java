@@ -41,8 +41,8 @@ public class InterestController {
         SelectedInterestsResponseDto responseDto = interestService.setSelectedInterests(memberId, requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
-    @Operation(summary = "홈(메인) 화면 - ML 서버 값 DB저장 ", description = "ml서버에 요청을 보내고 받은 응답을 DB에 저장합니다.(차후 한시간에 한번씩 자동으로 실행되도록 변경 필요)",
-            responses = {@ApiResponse(responseCode = "200", description = "관심기사 목록이 성공적으로 DB에 저장되었습니다.",
+    @Operation(summary = "홈(메인) 화면 - 관심 기사 전체 목록 가져오기 ", description = "DB에서 관심기사 목록을 받아오기",
+            responses = {@ApiResponse(responseCode = "200", description = "관심기사 목록을 성공적으로 조회하였습니다.",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = InterestArticleResponseDto.class))))
             })
     @GetMapping("/getarticle")
