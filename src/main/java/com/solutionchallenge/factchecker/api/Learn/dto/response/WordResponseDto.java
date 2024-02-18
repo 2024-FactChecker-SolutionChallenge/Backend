@@ -13,6 +13,7 @@ public class WordResponseDto {
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private Boolean knowStatus;
+    private Boolean showMean;
 
     public WordResponseDto(Word word) {
         this.id = word.getWordId();
@@ -21,5 +22,6 @@ public class WordResponseDto {
         this.createdDate = word.getCreatedDate();
         this.modifiedDate = word.getModifiedDate();
         this.knowStatus = word.isKnowStatus();
+        this.showMean = false;
     }
 }
