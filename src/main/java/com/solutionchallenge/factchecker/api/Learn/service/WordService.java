@@ -47,6 +47,7 @@ public class WordService {
     public WordResponseDto updateWordStatus(Long wordId, String member_id) {
         // 해당 유저의 단어 목록에서 wordId에 해당하는 단어 찾기
         Word word = wordRepository.findByWordIdAndMember_Id(wordId, member_id).orElseThrow(()->new CustomException("User not found or word not exist"));
+        word.updateWord(word.getWord(), word.getMean(), !word.isKnowStatus());
         // 변경된 Word 엔터티를 저장하고 응답
         Word updatedWord = wordRepository.save(word);
         return new WordResponseDto(updatedWord);
