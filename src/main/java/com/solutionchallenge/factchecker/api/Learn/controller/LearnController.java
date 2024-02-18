@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +38,9 @@ public class LearnController {
     private final WordService wordService;
 
 
-    @PostMapping("/learn/word")
-    public ResponseEntity<Map<String, Object>> saveWord(
-            @RequestBody ArticleWordRequestDto articleWordRequestDto,
+    @PostMapping("/learn/words")
+    public ResponseEntity<Map<String, Object>> saveWords(
+            @RequestBody List<ArticleWordRequestDto> articleWordRequestDtos,
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
             @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
     ) {
@@ -47,24 +48,31 @@ public class LearnController {
         UserDetailsImpl userDetails = (UserDetailsImpl) principal;
         String memberId = userDetails.getUsername();
 
-        // Transform ArticleWordRequestDto to ArticleWordResponse
-        ArticleWordResponse articleWordResponse = new ArticleWordResponse();
-        articleWordResponse.setWord(articleWordRequestDto.getWord());
-        articleWordResponse.setMean(articleWordRequestDto.getMean());
+        List<ArticleWordResponse> savedWords = new ArrayList<>();
 
-        // Save the word
-        wordService.saveWord(memberId, articleWordRequestDto);
+        for (ArticleWordRequestDto requestDto : articleWordRequestDtos) {
+            // Transform ArticleWordRequestDto to ArticleWordResponse
+            ArticleWordResponse articleWordResponse = new ArticleWordResponse();
+            articleWordResponse.setWord(requestDto.getWord());
+            articleWordResponse.setMean(requestDto.getMean());
+
+            // Save the word
+            wordService.saveWord(memberId, requestDto);
+
+            savedWords.add(articleWordResponse);
+        }
 
         // Build the response
         Map<String, Object> response = new HashMap<>();
         response.put("isSuccess", true);
         response.put("code", HttpStatus.CREATED.value());
         response.put("message", "요청에 성공했습니다.");
-        response.put("data", articleWordResponse);
+        response.put("data", savedWords);
 
         // Return the response with appropriate status code
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
     @Operation(summary = "단어장 - 단어 리스트 조회", description = "단어장에 올릴 단어들을 조회합니다. 이때 생성일 기준 최신순으로 정렬해서 가져옵니다.",
             responses = {@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = WordResponseDto.class))))})
