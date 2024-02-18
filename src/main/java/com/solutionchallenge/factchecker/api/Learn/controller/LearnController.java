@@ -1,6 +1,7 @@
 package com.solutionchallenge.factchecker.api.Learn.controller;
 
 import com.solutionchallenge.factchecker.api.Learn.dto.request.ArticleWordRequestDto;
+import com.solutionchallenge.factchecker.api.Learn.dto.request.WordDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.ArticleWordResponse;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.ChallengeQuizResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.service.WordService;
@@ -40,7 +41,7 @@ public class LearnController {
 
     @PostMapping("/learn/words")
     public ResponseEntity<Map<String, Object>> saveWords(
-            @RequestBody List<ArticleWordRequestDto> articleWordRequestDtos,
+            @RequestBody ArticleWordRequestDto wordsRequestDto,
             @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
             @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN
     ) {
@@ -50,13 +51,11 @@ public class LearnController {
 
         List<ArticleWordResponse> savedWords = new ArrayList<>();
 
-        for (ArticleWordRequestDto requestDto : articleWordRequestDtos) {
-            // Transform ArticleWordRequestDto to ArticleWordResponse
+        for (WordDto requestDto : wordsRequestDto.getWords()) {
             ArticleWordResponse articleWordResponse = new ArticleWordResponse();
             articleWordResponse.setWord(requestDto.getWord());
             articleWordResponse.setMean(requestDto.getMean());
 
-            // Save the word
             wordService.saveWord(memberId, requestDto);
 
             savedWords.add(articleWordResponse);
@@ -72,6 +71,8 @@ public class LearnController {
         // Return the response with appropriate status code
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+
 
 
     @Operation(summary = "단어장 - 단어 리스트 조회", description = "단어장에 올릴 단어들을 조회합니다. 이때 생성일 기준 최신순으로 정렬해서 가져옵니다.",

@@ -2,6 +2,7 @@ package com.solutionchallenge.factchecker.api.Learn.service;
 import java.sql.Timestamp;
 
 import com.solutionchallenge.factchecker.api.Learn.dto.request.ArticleWordRequestDto;
+import com.solutionchallenge.factchecker.api.Learn.dto.request.WordDto;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.global.exception.CustomException;
@@ -63,7 +64,7 @@ public class WordService {
 
     }
     @Transactional
-    public void saveWord(String memberId, ArticleWordRequestDto articleWordResponse) {
+    public void saveWord(String memberId, WordDto wordDto) {
         // Get the current timestamp
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
@@ -71,12 +72,13 @@ public class WordService {
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
 
         Word word = Word.builder()
-                .word(articleWordResponse.getWord())
-                .mean(articleWordResponse.getMean())
+                .word(wordDto.getWord())  // Use wordDto instead of undefined articleWordResponse
+                .mean(wordDto.getMean())  // Use wordDto instead of undefined articleWordResponse
                 .knowStatus(false)
                 .createdDate(now) // Use the current timestamp
                 .modifiedDate(now) // Use the current timestamp
                 .build();
+
 
         wordRepository.save(word);
     }
