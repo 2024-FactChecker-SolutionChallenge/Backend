@@ -18,6 +18,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -42,10 +43,16 @@ public class InterestService {
         this.memberRepository = memberRepository;
         this.interestRepository = interestRepository;
 
+        // DataBuffer limit를 늘리는 예제 코드
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
+                .build();
+
         HttpClient httpClient = HttpClient.create()
                 .responseTimeout(Duration.ofMinutes(5));
 
         this.webClient = webClientBuilder.baseUrl("http://34.22.87.117:5000")
+                .exchangeStrategies(strategies)
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
