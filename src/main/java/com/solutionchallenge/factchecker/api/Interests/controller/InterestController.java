@@ -28,17 +28,27 @@ import java.util.List;
 public class InterestController {
     private final InterestService interestService;
 
-    @GetMapping("/selected/{memberId}")
-    public ResponseEntity<List<String>> getSelectedInterests(@PathVariable String memberId) {
-        List<String> selectedInterests = interestService.getSelectedInterests(memberId);
+    @GetMapping("/selected")
+    public ResponseEntity<List<String>> getSelectedInterests(
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN,
+            @PathVariable String memberId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+        List<String> selectedInterests = interestService.getSelectedInterests(userDetails.getUsername());
         return ResponseEntity.ok(selectedInterests);
     }
 
-    @PostMapping("/selected/{memberId}")
+    @PostMapping("/selected")
     public ResponseEntity<SelectedInterestsResponseDto> setSelectedInterests(
-            @PathVariable String memberId,
+            @RequestHeader(name = "ACCESS_TOKEN", required = false) String ACCESS_TOKEN,
+            @RequestHeader(name = "REFRESH_TOKEN", required = false) String REFRESH_TOKEN,
             @RequestBody SelectedInterestsRequestDto requestDto) {
-        SelectedInterestsResponseDto responseDto = interestService.setSelectedInterests(memberId, requestDto);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+
+        SelectedInterestsResponseDto responseDto = interestService.setSelectedInterests(userDetails.getUsername(), requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
     @Operation(summary = "홈(메인) 화면 - 관심 기사 전체 목록 가져오기 ", description = "DB에서 관심기사 목록을 받아오기",
