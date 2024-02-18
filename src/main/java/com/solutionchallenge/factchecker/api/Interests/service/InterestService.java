@@ -80,7 +80,7 @@ public class InterestService {
                 .build();
     }
     public List<InterestArticleResponseDto> getArticles(String memberId) {
-        interestRepository.deleteAll();
+        //interestRepository.deleteAll();
         //1. ML에서 전체 기사 데이터 받아오기 MLResponseDTO로 매핑해서 가지고 있기./ DTo를 Entity로 매핑해서 DB에 저장하기
         saveInterestsFromMLResponse();
         // DB에서 모든 Interest 엔티티를 조회
@@ -112,17 +112,22 @@ public class InterestService {
                 .uri(uriBuilder -> uriBuilder.path("/interests").build())
                 .retrieve()
                 // 에러 상태 코드 처리
-                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new CustomException("Client error, incorrect request")))
-                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new CustomException("Server error, retrying...")))
+                .onStatus(HttpStatus::is4xxClientError, response ->
+                        response.bodyToMono(String.class)
+                                .flatMap(errorBody -> Mono.error(new CustomException("Client error, incorrect request. Details: " + errorBody))))
+                .onStatus(HttpStatus::is5xxServerError, response ->
+                        response.bodyToMono(String.class)
+                                .flatMap(errorBody -> Mono.error(new CustomException("Server error, retrying... Details: " + errorBody))))
                 // 성공 응답 처리
                 .bodyToMono(new ParameterizedTypeReference<List<MLResponseDto>>() {})
                 .retryWhen(Retry.max(5)
                         .filter(throwable -> throwable instanceof CustomException && throwable.getMessage().contains("retrying")))
                 .onErrorResume(e -> {
-                    log.error("After retries or timeout, processing failed: {}", e.getMessage());
-                    return Mono.error(new CustomException("ML 서버의 트래픽이 너무 많거나 답을 응답하는데 너무 오래걸립니다. 재요청해주세요"));
+                    // 여기서는 e.getMessage()를 직접 사용하여 에러 원인을 포함시킵니다.
+                    return Mono.error(new CustomException("ML 서버의 트래픽이 너무 많거나 답을 응답하는데 너무 오래걸립니다. 재요청해주세요. Details: " + e.getMessage()));
                 });
     }
+
 
     private Interest convertDtoToEntity(MLResponseDto dto) {
         Interest interest = new Interest();

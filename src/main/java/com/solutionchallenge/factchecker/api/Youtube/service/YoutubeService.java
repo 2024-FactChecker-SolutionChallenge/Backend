@@ -112,7 +112,7 @@ public class YoutubeService {
 
             List<RelatedNewsDto> currYoutubeNews = mlResponse.getCurrYoutubeNews();
             List<RelatedNewsDto> relYoutubeNews = mlResponse.getRelYoutubeNews();
-            //TODO : title 값 잘못 들어오는 문제 해결하기
+
             String title = mlResponse.getYt_title();
             String keyword = mlResponse.getKeyword();
             String upload_date = mlResponse.getUploadDate();
