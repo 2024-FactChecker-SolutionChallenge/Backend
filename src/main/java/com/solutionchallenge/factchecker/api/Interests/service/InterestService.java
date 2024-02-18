@@ -43,7 +43,6 @@ public class InterestService {
         this.memberRepository = memberRepository;
         this.interestRepository = interestRepository;
 
-        // DataBuffer limit를 늘리는 예제 코드
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
                 .build();
@@ -87,7 +86,7 @@ public class InterestService {
                 .build();
     }
     public List<InterestArticleResponseDto> getArticles(String memberId) {
-        //interestRepository.deleteAll();
+        interestRepository.deleteAll();
         //1. ML에서 전체 기사 데이터 받아오기 MLResponseDTO로 매핑해서 가지고 있기./ DTo를 Entity로 매핑해서 DB에 저장하기
         saveInterestsFromMLResponse();
         // DB에서 모든 Interest 엔티티를 조회
@@ -105,12 +104,11 @@ public class InterestService {
 
     @Transactional
     public void saveInterestsFromMLResponse() {
-        // fetchDataFromMLServer()가 Mono<List<MLResponseDto>> 대신 List<MLResponseDto>를 반환한다고 가정
         List<MLResponseDto> dtos = fetchDataFromMLServer().block(); // 리액티브 타입을 동기적으로 처리
 
         for (MLResponseDto dto : dtos) {
             Interest interest = convertDtoToEntity(dto);
-            interestRepository.save(interest); // 변환된 엔티티를 데이터베이스에 저장
+            interestRepository.save(interest);
         }
     }
 

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -36,11 +37,16 @@ public class YoutubeService {
         this.youtubeRepository = youtubeRepository;
         this.memberRepository = memberRepository;
         this.relatedNewsRepository = relatedNewsRepository;
-        // HttpClient를 사용하여 타임아웃 설정
+
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
+                .build();
+
         HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofMinutes(5)); // 5분 타임아웃 설정
+                .responseTimeout(Duration.ofMinutes(5));
 
         this.webClient = webClientBuilder.baseUrl("http://34.22.87.117:5000")
+                .exchangeStrategies(strategies)
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
