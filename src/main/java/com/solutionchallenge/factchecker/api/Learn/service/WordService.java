@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//Module Service
 @Slf4j
 @Service
 public class WordService {
@@ -28,7 +27,7 @@ public class WordService {
     @Autowired
     public WordService(WordRepository wordRepository, MemberRepository memberRepository) {
         this.wordRepository = wordRepository;
-        this.memberRepository = memberRepository; // Assigning the memberRepository
+        this.memberRepository = memberRepository;
     }
 
 
@@ -40,7 +39,7 @@ public class WordService {
 
         // WordResponseDto로 변환하여 반환
         return words.stream()
-                .map(WordResponseDto::new) // WordResponseDto를 적절하게 구현해야 합니다.
+                .map(WordResponseDto::new)
                 .collect(Collectors.toList());
     }
 
@@ -65,24 +64,24 @@ public class WordService {
     }
     @Transactional
     public void saveWord(String memberId, WordDto wordDto) {
-        // Get the current timestamp
         Timestamp now = new Timestamp(System.currentTimeMillis());
+
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
 
         Word word = Word.builder()
-                .word(wordDto.getWord())  // Use wordDto instead of undefined articleWordResponse
-                .mean(wordDto.getMean())  // Use wordDto instead of undefined articleWordResponse
+                .word(wordDto.getWord())
+                .mean(wordDto.getMean())
                 .knowStatus(false)
-                .createdDate(now) // Use the current timestamp
-                .modifiedDate(now) // Use the current timestamp
+                .createdDate(now)
+                .modifiedDate(now)
+                .member(member) // Member 객체 설정
                 .build();
 
-
         wordRepository.save(word);
-    }
 
 
 
+}
 }

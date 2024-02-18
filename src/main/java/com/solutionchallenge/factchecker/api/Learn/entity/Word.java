@@ -41,13 +41,14 @@ public class Word {
     private Member member;
 
     @Builder
-    public Word(Long wordId, String word, String mean, boolean knowStatus, Timestamp createdDate, Timestamp modifiedDate) {
+    public Word(Long wordId, String word, String mean, boolean knowStatus, Timestamp createdDate, Timestamp modifiedDate , Member member) {
         this.wordId = wordId;
         this.word = word;
         this.mean = mean;
         this.knowStatus = knowStatus;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+        this.member = member;
     }
 
     public void updateWord(String word, String mean, boolean knowStatus) {
