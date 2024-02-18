@@ -52,7 +52,7 @@ public class YoutubeService {
     }
 
     public YoutubeSuccessDto processYoutubeNews(String member_id, String url) {
-        Optional<Youtube> existingYoutube = youtubeRepository.findByUrl(url);
+        Optional<Youtube> existingYoutube = youtubeRepository.findByUrlAndMember_Id(url, member_id);
         if (existingYoutube.isPresent()) {
             throw new CustomException("url already processed.");
         }
@@ -63,8 +63,7 @@ public class YoutubeService {
         return new YoutubeSuccessDto(member_id, url);
     }
 
-
-    private Mono<MLResponseDto> sendUrlToMlServer(String member_id,  String url) {
+    private Mono<MLResponseDto> sendUrlToMlServer(String member_id, String url) {
         return webClient.post()
                 .uri("/youtubeNews/related")
                 .bodyValue(Collections.singletonMap("url", url))
@@ -76,17 +75,19 @@ public class YoutubeService {
                                     try {
                                         return handleMlServerResponse(member_id, url, body);
                                     } catch (JsonProcessingException e) {
-                                        return Mono.error(new RuntimeException(e));
+                                        return Mono.error(new RuntimeException("Error processing response: " + e.getMessage(), e));
                                     }
                                 });
                     } else if (response.statusCode().is4xxClientError()) {
-                        // 400번대 에러 처리, 예외 발생
-                        return Mono.error(new CustomException("Client error, incorrect request"));
+                        // 400번대 에러 처리, 에러 메시지 포함
+                        return response.bodyToMono(String.class)
+                                .flatMap(errorBody -> Mono.error(new CustomException("Client error, incorrect request. Details: " + errorBody)));
                     } else if (response.statusCode().is5xxServerError()) {
-                        // 500번대 에러 처리, 재시도를 위해 에러 발생
-                        return Mono.error(new CustomException("Server error, retrying..."));
+                        // 500번대 에러 처리, 에러 메시지 포함 및 재시도
+                        return response.bodyToMono(String.class)
+                                .flatMap(errorBody -> Mono.error(new CustomException("Server error, retrying... Details: " + errorBody)));
                     } else {
-                        // 그 외 상태 코드 처리, 예외 발생
+                        // 그 외 상태 코드 처리, 에러 메시지 포함
                         return Mono.error(new CustomException("Unexpected response status: " + response.statusCode()));
                     }
                 })
@@ -94,7 +95,7 @@ public class YoutubeService {
                         .filter(throwable -> throwable instanceof CustomException && throwable.getMessage().contains("retrying")))
                 .onErrorResume(e -> {
                     log.error("After retries or timeout, processing failed: {}", e.getMessage());
-                    return Mono.error(new CustomException("ML 서버의 트래픽이 너무 많거나 처리할 수 없는 url 입니다. 재요청해주세요"));
+                    return Mono.error(new CustomException("ML 서버의 트래픽이 너무 많거나 처리할 수 없는 URL입니다. Details: " + e.getMessage()));
                 });
     }
 
