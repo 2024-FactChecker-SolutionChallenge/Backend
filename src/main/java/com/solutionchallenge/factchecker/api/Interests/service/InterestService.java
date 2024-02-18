@@ -93,14 +93,13 @@ public class InterestService {
     }
 
     public void updateArticles(){
-        interestRepository.deleteAll();
         saveInterestsFromMLResponse();
     }
 
     @Transactional
     public void saveInterestsFromMLResponse() {
         List<MLResponseDto> dtos = fetchDataFromMLServer().block(); // 리액티브 타입을 동기적으로 처리
-
+        interestRepository.deleteAll();
         for (MLResponseDto dto : dtos) {
             Interest interest = convertDtoToEntity(dto);
             interestRepository.save(interest);
