@@ -9,8 +9,4 @@ import java.util.List;
 @Setter
 public class ArticleWordRequestDto {
     private List<WordDto> words;
-
-
-
-
 }

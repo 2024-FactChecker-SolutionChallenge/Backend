@@ -1,7 +1,6 @@
 package com.solutionchallenge.factchecker.api.Learn.service;
 import java.sql.Timestamp;
 
-import com.solutionchallenge.factchecker.api.Learn.dto.request.ArticleWordRequestDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.request.WordDto;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
@@ -11,8 +10,6 @@ import com.solutionchallenge.factchecker.api.Learn.repository.WordRepository;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.WordResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -82,7 +79,5 @@ public class WordService {
 
         wordRepository.save(word);
 
-
-
-}
+    }
 }

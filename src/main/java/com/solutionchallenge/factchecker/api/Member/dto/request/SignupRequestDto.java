@@ -3,8 +3,6 @@ package com.solutionchallenge.factchecker.api.Member.dto.request;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Data

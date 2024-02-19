@@ -7,7 +7,6 @@ import com.solutionchallenge.factchecker.api.Member.dto.response.TokenResponseDt
 import com.solutionchallenge.factchecker.api.Member.entity.Grade;
 import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
-import com.solutionchallenge.factchecker.api.Youtube.dto.response.ArticleDetailDto;
 import com.solutionchallenge.factchecker.global.auth.JwtUtil;
 import com.solutionchallenge.factchecker.global.entity.RefreshToken;
 import com.solutionchallenge.factchecker.global.exception.CustomException;

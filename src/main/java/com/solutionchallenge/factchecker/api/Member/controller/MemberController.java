@@ -10,7 +10,6 @@ import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
 import com.solutionchallenge.factchecker.api.Member.repository.MemberRepository;
 import com.solutionchallenge.factchecker.api.Member.service.EmailService;
 import com.solutionchallenge.factchecker.api.Member.service.MemberService;
-import com.solutionchallenge.factchecker.api.Youtube.dto.response.ArticleDetailDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

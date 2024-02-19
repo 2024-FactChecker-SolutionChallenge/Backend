@@ -1,8 +1,5 @@
 package com.solutionchallenge.factchecker.api.Interests.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.solutionchallenge.factchecker.api.Youtube.dto.response.RelatedNewsDto;
-import com.solutionchallenge.factchecker.api.Youtube.entity.Category;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

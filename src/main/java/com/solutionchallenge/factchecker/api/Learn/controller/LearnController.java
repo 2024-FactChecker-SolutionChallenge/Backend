@@ -1,7 +1,6 @@
 package com.solutionchallenge.factchecker.api.Learn.controller;
 
 import com.solutionchallenge.factchecker.api.Learn.dto.request.ArticleWordRequestDto;
-import com.solutionchallenge.factchecker.api.Learn.dto.request.WordDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.ArticleWordResponse;
 import com.solutionchallenge.factchecker.api.Learn.dto.response.ChallengeQuizResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.service.WordService;
@@ -10,7 +9,6 @@ import com.solutionchallenge.factchecker.api.Learn.dto.response.DailyQuizScoreRe
 import com.solutionchallenge.factchecker.api.Learn.dto.response.WordResponseDto;
 import com.solutionchallenge.factchecker.api.Learn.dto.request.DailyQuizRequestDto;
 import com.solutionchallenge.factchecker.api.Learn.service.LearnService;
-import com.solutionchallenge.factchecker.global.dto.response.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +35,6 @@ public class LearnController {
     private final LearnService learnService;
     private final WordService wordService;
 
-
     @PostMapping("/learn/words")
     public ResponseEntity<Map<String, Object>> saveWords(
             @RequestBody ArticleWordRequestDto wordsRequestDto,
@@ -49,17 +45,7 @@ public class LearnController {
         UserDetailsImpl userDetails = (UserDetailsImpl) principal;
         String memberId = userDetails.getUsername();
 
-        List<ArticleWordResponse> savedWords = new ArrayList<>();
-
-        for (WordDto requestDto : wordsRequestDto.getWords()) {
-            ArticleWordResponse articleWordResponse = new ArticleWordResponse();
-            articleWordResponse.setWord(requestDto.getWord());
-            articleWordResponse.setMean(requestDto.getMean());
-
-            wordService.saveWord(memberId, requestDto);
-
-            savedWords.add(articleWordResponse);
-        }
+        List<ArticleWordResponse> savedWords = learnService.saveWord(memberId, wordsRequestDto);
 
         // Build the response
         Map<String, Object> response = new HashMap<>();
@@ -71,9 +57,6 @@ public class LearnController {
         // Return the response with appropriate status code
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
-
-
 
     @Operation(summary = "단어장 - 단어 리스트 조회", description = "단어장에 올릴 단어들을 조회합니다. 이때 생성일 기준 최신순으로 정렬해서 가져옵니다.",
             responses = {@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = WordResponseDto.class))))})
@@ -147,5 +130,7 @@ public class LearnController {
         ChallengeQuizResponseDto dto = learnService.challengeDailyQuiz(userDetails.getUsername());
         return ResponseEntity.ok().body(dto);
     }
+
+
 
 }

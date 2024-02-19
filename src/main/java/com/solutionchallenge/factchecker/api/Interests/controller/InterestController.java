@@ -6,7 +6,6 @@ import com.solutionchallenge.factchecker.api.Interests.dto.response.InterestArti
 import com.solutionchallenge.factchecker.api.Interests.dto.response.SelectedInterestsResponseDto;
 import com.solutionchallenge.factchecker.api.Interests.service.InterestService;
 import com.solutionchallenge.factchecker.api.Member.entity.UserDetailsImpl;
-import com.solutionchallenge.factchecker.api.Youtube.dto.response.ArticleDetailDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

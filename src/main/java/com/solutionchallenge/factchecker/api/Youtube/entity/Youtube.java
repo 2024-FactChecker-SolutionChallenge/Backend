@@ -4,7 +4,6 @@ import com.solutionchallenge.factchecker.api.Member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;

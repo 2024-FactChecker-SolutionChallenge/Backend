@@ -5,7 +5,6 @@ import com.solutionchallenge.factchecker.global.entity.RefreshToken;
 import com.solutionchallenge.factchecker.global.repository.RefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;

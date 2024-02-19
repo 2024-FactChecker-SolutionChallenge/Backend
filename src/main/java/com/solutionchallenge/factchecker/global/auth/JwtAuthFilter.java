@@ -1,6 +1,5 @@
 package com.solutionchallenge.factchecker.global.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.solutionchallenge.factchecker.api.Member.dto.response.TokenResponseDto;
 import com.solutionchallenge.factchecker.global.dto.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

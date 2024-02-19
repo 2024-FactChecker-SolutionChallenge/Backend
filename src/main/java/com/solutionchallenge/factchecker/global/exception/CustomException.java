@@ -1,6 +1,5 @@
 package com.solutionchallenge.factchecker.global.exception;
 
-import com.solutionchallenge.factchecker.global.dto.response.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
 

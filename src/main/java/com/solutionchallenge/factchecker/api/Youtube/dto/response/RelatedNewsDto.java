@@ -1,7 +1,6 @@
 package com.solutionchallenge.factchecker.api.Youtube.dto.response;
 
 
-import com.solutionchallenge.factchecker.api.Youtube.entity.Category;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
