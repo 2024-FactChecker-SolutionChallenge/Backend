@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class ChallengeQuizResponseDto {
     private String userId;
     private int left_opportunities;
-    // 생성자, getter, setter 등 필요한 메서드들 추가
 
     public ChallengeQuizResponseDto(Member member) {
         this.userId = member.getId();

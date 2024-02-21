@@ -14,12 +14,6 @@ public class MyProfileResponseDto {
     private int  weekly_total_quiz;
     private int weekly_quiz_goal;
     private int bonusScore;
-/*
-[ 기사수 / 단어수 ]
-초급 : 5개 / 20개
-중급 : 10개 / 40개
-고급 : 15개 / 60개
- */
     public MyProfileResponseDto(Member member, int weekNews, int dailyScore) {
         if (member.getGrade() == Grade.BEGINNER) {
             this.weekly_read_goal = 5;

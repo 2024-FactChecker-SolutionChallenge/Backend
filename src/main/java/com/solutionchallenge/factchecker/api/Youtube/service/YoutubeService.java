@@ -56,9 +56,6 @@ public class YoutubeService {
         if (existingYoutube.isPresent()) {
             throw new CustomException("url already processed.");
         }
-
-
-        // ML 서버에 URL 처리 요청
         sendUrlToMlServer(member_id, url).block();
         return new YoutubeSuccessDto(member_id, url);
     }
@@ -69,7 +66,6 @@ public class YoutubeService {
                 .bodyValue(Collections.singletonMap("url", url))
                 .exchangeToMono(response -> {
                     if (response.statusCode().is2xxSuccessful()) {
-                        // 200번대 응답 처리
                         return response.bodyToMono(String.class)
                                 .flatMap(body -> {
                                     try {
@@ -79,15 +75,12 @@ public class YoutubeService {
                                     }
                                 });
                     } else if (response.statusCode().is4xxClientError()) {
-                        // 400번대 에러 처리, 에러 메시지 포함
                         return response.bodyToMono(String.class)
                                 .flatMap(errorBody -> Mono.error(new CustomException("Client error, incorrect request. Details: " + errorBody)));
                     } else if (response.statusCode().is5xxServerError()) {
-                        // 500번대 에러 처리, 에러 메시지 포함 및 재시도
                         return response.bodyToMono(String.class)
                                 .flatMap(errorBody -> Mono.error(new CustomException("Server error, retrying... Details: " + errorBody)));
                     } else {
-                        // 그 외 상태 코드 처리, 에러 메시지 포함
                         return Mono.error(new CustomException("Unexpected response status: " + response.statusCode()));
                     }
                 })
@@ -129,7 +122,7 @@ public class YoutubeService {
             currYoutubeNews.forEach(newsDto -> saveRelatedNews(newsDto, Category.LATEST, updatedyoutube));
             relYoutubeNews.forEach(newsDto -> saveRelatedNews(newsDto, Category.RELATED, updatedyoutube));
 
-            return mlResponse; // MLResponseDto 반환
+            return mlResponse;
         });
     }
 
@@ -163,12 +156,12 @@ public class YoutubeService {
     @Transactional
     public YoutubeResponseDto convertToDto(Youtube youtube) {
         List<RelatedNewsDto> curr_youtube_news = youtube.getRelatedNews().stream()
-                .filter(news -> news.getCategory() == Category.LATEST) // 'LATEST' 카테고리 필터링
+                .filter(news -> news.getCategory() == Category.LATEST)
                 .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility()))
                 .collect(Collectors.toList());
 
         List<RelatedNewsDto> rel_youtube_news = youtube.getRelatedNews().stream()
-                .filter(news -> news.getCategory() == Category.RELATED) // 'RELATED' 카테고리 필터링
+                .filter(news -> news.getCategory() == Category.RELATED)
                 .map(news -> new RelatedNewsDto(news.getId(), news.getTitle(), news.getArticle(), news.getUpload_date(), news.getCredibility()))
                 .collect(Collectors.toList());
 

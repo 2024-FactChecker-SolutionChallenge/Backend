@@ -12,7 +12,6 @@ import java.util.Map;
 public class DailyQuizScoreResponseDto {
     private String userId;
     private Map<String, Integer> dailyScore;
-    // 생성자, getter, setter 등 필요한 메서드들 추가
 
     public DailyQuizScoreResponseDto(Member member) {
         this.userId = member.getId();

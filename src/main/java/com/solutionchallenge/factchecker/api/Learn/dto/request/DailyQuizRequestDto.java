@@ -4,9 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class DailyQuizRequestDto {
-    private String day; //예시: "월", "화" , "수"
+    private String day;
     private int score;
-    // 기본 생성자 추가
     public DailyQuizRequestDto() {
     }
     public DailyQuizRequestDto( String day, int score) {

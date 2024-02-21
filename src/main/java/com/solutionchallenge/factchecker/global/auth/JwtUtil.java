@@ -31,8 +31,8 @@ public class JwtUtil {
 
 
 
-    private static final long ACCESS_TIME =  60 * 60 * 1000L; // 1시간
-    private static final long REFRESH_TIME =  14 * 24 * 60 * 60 * 1000L; // 14일
+    private static final long ACCESS_TIME =  60 * 60 * 1000L;
+    private static final long REFRESH_TIME =  14 * 24 * 60 * 60 * 1000L;
     public static final String ACCESS_TOKEN = "Access_Token";
     public static final String REFRESH_TOKEN = "Refresh_Token";
 
@@ -42,19 +42,16 @@ public class JwtUtil {
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-    // bean으로 등록 되면서 딱 한번 실행
     @PostConstruct
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // header 토큰을 가져오는 기능
     public String getHeaderToken(HttpServletRequest request, String type) {
         return type.equals("Access") ? request.getHeader(ACCESS_TOKEN) :request.getHeader(REFRESH_TOKEN);
     }
 
-    // 토큰 생성
     public TokenResponseDto createAllToken(String email) {
         return new TokenResponseDto(createToken(email, "Access"), createToken(email, "Refresh"));
     }
@@ -74,7 +71,6 @@ public class JwtUtil {
 
     }
 
-    // 토큰 검증
     public Boolean tokenValidation(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -85,40 +81,32 @@ public class JwtUtil {
         }
     }
 
-    // refreshToken 토큰 검증 - DB 저장된 토큰과 비교
     public Boolean refreshTokenValidation(String token) {
 
-        // 1차 검증
         if(!tokenValidation(token)) return false;
 
-        // DB에 저장한 토큰 비교
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByEmail(getEmailFromToken(token));
 
         return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
     }
 
-    // 인증 객체 생성
     public Authentication createAuthentication(String email) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // 토큰에서 email 가져오는 기능
     public String getEmailFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
     }
 
-    // Access Token 헤더 설정
     public void setHeaderAccessToken(HttpServletResponse response, String accessToken) {
         response.setHeader("Access_Token", accessToken);
     }
 
-    // Refresh Token 헤더 설정
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
         response.setHeader("Refresh_Token", refreshToken);
     }
 
-    // 모든 토큰 헤더 설정
     public void setHeaderToken(HttpServletResponse response, TokenResponseDto dto) {
         response.setHeader("Access_Token", dto.getAccessToken());
         response.setHeader("Refresh_Token", dto.getRefreshToken());

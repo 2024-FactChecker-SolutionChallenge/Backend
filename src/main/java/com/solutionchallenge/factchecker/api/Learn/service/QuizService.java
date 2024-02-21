@@ -47,17 +47,13 @@ public class QuizService {
     public ChallengeQuizResponseDto challengeDailyQuiz(String member_id) {
         Member member = memberRepository.findMemberById(member_id).orElseThrow(()->new CustomException("User not found"));
 
-        // 멤버가 존재할 경우
         int leftOpportunity = member.getLeft_opportunity();
 
         if (leftOpportunity >= 1) {
-            // left_opportunity가 1 이상인 경우
-            member.consumeLeftOpportunities(); // 기회 1 소진
+            member.consumeLeftOpportunities();
             Member updatedUser = memberRepository.save(member);
-            // Daily Quiz에 대한 로직 수행 및 결과를 DailyQuizScoreResponseDto에 담아 반환
             return new ChallengeQuizResponseDto(updatedUser);
         } else {
-            // left_opportunCity가 0 이하인 경우
             throw new CustomException("Daily Quiz opportunity is not remain");
         }
     }

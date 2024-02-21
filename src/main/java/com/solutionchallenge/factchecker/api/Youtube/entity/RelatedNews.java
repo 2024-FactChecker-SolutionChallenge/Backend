@@ -34,16 +34,13 @@ public class RelatedNews {
     @Enumerated(EnumType.ORDINAL)
     private Category category;
 
-    // Youtube 엔터티에 대한 참조 (외래 키)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "youtube_news_id")
     private Youtube youtube;
 
-    // User 엔터티에 대한 참조 (외래 키)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-    // 기본 생성자
     @Builder
     public RelatedNews(Long id, String title, @NotNull String article,String upload_date, float credibility, Category category, Youtube youtube, Member member) {
         this.id = id;

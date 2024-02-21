@@ -45,29 +45,24 @@ public class MemberController {
     public ResponseEntity signup(HttpServletResponse res, @RequestBody SignupRequestDto requestDto) throws Exception {
         Map<String, String> result = new HashMap<>();
 
-        // 중복가입 방지
+
         if (memberRepository.existsMemberById(requestDto.getId())) {
             result.put("error", "이미 존재하는 이메일입니다.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-//            return GlobalResponse.conflict("error", "존재하는 이메일입니다.");
         }
 
-        // 닉네임 중복검사
         else if (memberRepository.existsMemberByNickname(requestDto.getNickname())) {
             result.put("error", "이미 존재하는 닉네임입니다.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
-//            return GlobalResponse.conflict("error", "중복된 닉네임입니다.");
         }
 
         else {
-            // 회원가입 진행
             Member member = memberService.signup(res, requestDto);
             SignupResponseDto responseDto = SignupResponseDto.builder()
                     .id(member.getId())
                     .nickname(member.getNickname())
                     .grade(requestDto.getGrade())
                     .interests(requestDto.getInterests())
-//                   .interests(requestDto.getInterests()) //json 형식
                     .build();
             return ResponseEntity.ok(responseDto);
         }

@@ -10,8 +10,6 @@ public class LoginResponseDto {
 
     String id;
     String nickname;
-//    Map<String, String> interests;
-
 
     @Builder
     public LoginResponseDto(

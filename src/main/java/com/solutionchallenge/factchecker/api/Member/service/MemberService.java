@@ -30,12 +30,8 @@ public class MemberService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
-    /*
-     ** 회원가입
-     */
     @Transactional
     public Member signup(HttpServletResponse res, SignupRequestDto signupRequestDto) throws Exception {
-        // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
         Grade grade = Grade.getGrade(signupRequestDto.getGrade());
 
@@ -49,10 +45,8 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        // 토큰 생성
         TokenResponseDto tokenResponseDto = jwtUtil.createAllToken(signupRequestDto.getId()); // 토큰 생성
 
-        // Refresh Token DB 저장
         RefreshToken refreshToken = RefreshToken.builder()
                 .email(signupRequestDto.getId())
                 .token(tokenResponseDto.getRefreshToken())
@@ -63,12 +57,8 @@ public class MemberService {
         return member;
     }
 
-    /*
-     ** 로그인
-     */
     @Transactional
     public LoginResponseDto login(HttpServletResponse res, LoginRequestDto loginRequestDto) throws Exception {
-        // 존재하지 않는 회원에 대한 에러처리
         if (!memberRepository.existsMemberById(loginRequestDto.getId())) {
             res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             throw new BadCredentialsException("존재하지 않는 이메일입니다.");
@@ -105,7 +95,6 @@ public class MemberService {
         return new MyProfileResponseDto(member,weekNewsSum, dailyScoreSum);
     }
 
-//Scheduler 루틴 메소드들
     @Transactional
     public void resetWeeklyData() {
         memberRepository.findAll().forEach(member -> {

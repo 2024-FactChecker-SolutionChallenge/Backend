@@ -59,7 +59,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @NotNull
     private int left_opportunity;
-    // 회원가입용
     @Builder
     public Member(String id, String password, String nickname, Grade grade , Map<String , String> interests) {
         this.id = id;
@@ -109,25 +108,21 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
 
 
-    // 계정 만료되었는지 (true - 만료 안됨)
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    // 계정 잠겨있는지 (true - 안잠김)
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    // 계정 비밀번호 만료되었는지 (true - 만료 X)
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    // 계정 활성화 상태인지 (true - 활성화)
     @Override
     public boolean isEnabled() {
         return true;

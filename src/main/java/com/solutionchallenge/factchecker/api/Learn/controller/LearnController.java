@@ -34,7 +34,6 @@ import java.util.Map;
 public class LearnController {
     private final LearnService learnService;
     private final WordService wordService;
-
     @PostMapping("/learn/words")
     public ResponseEntity<Map<String, Object>> saveWords(
             @RequestBody ArticleWordRequestDto wordsRequestDto,
@@ -47,14 +46,12 @@ public class LearnController {
 
         List<ArticleWordResponse> savedWords = learnService.saveWord(memberId, wordsRequestDto);
 
-        // Build the response
         Map<String, Object> response = new HashMap<>();
         response.put("isSuccess", true);
         response.put("code", HttpStatus.CREATED.value());
         response.put("message", "요청에 성공했습니다.");
         response.put("data", savedWords);
 
-        // Return the response with appropriate status code
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -83,7 +80,6 @@ public class LearnController {
         WordResponseDto dto = learnService.updateWord(wordId, userDetails.getUsername());
         return ResponseEntity.ok().body(dto);
     }
-    //랜덤이므로 querydsl 사용예정- 랜덤으로 knowstatus false인 단어 리스트로 가져오기
     @Operation(summary = "어휘학습 - flip card", description = "모르는 단어 리스트를 랜덤으로 가져온다 -> flip card로 제공",
             responses = {@ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(array = @ArraySchema(schema = @Schema(implementation = WordResponseDto.class))))})
     @GetMapping("/study/flip-cards/word")

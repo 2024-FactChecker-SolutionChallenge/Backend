@@ -35,7 +35,6 @@ public class Word {
     @NotNull
     private Timestamp modifiedDate;
 
-    // User 엔터티에 대한 참조 (외래 키)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

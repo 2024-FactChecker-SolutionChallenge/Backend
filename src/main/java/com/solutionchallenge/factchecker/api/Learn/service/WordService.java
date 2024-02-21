@@ -34,7 +34,6 @@ public class WordService {
             throw new CustomException("Words not exist");
         }
 
-        // WordResponseDto로 변환하여 반환
         return words.stream()
                 .map(WordResponseDto::new)
                 .collect(Collectors.toList());
@@ -42,18 +41,14 @@ public class WordService {
 
     @Transactional(readOnly = false)
     public WordResponseDto updateWordStatus(Long wordId, String member_id) {
-        // 해당 유저의 단어 목록에서 wordId에 해당하는 단어 찾기
         Word word = wordRepository.findByWordIdAndMember_Id(wordId, member_id).orElseThrow(()->new CustomException("User not found or word not exist"));
         word.updateWord(word.getWord(), word.getMean(), !word.isKnowStatus());
-        // 변경된 Word 엔터티를 저장하고 응답
         Word updatedWord = wordRepository.save(word);
         return new WordResponseDto(updatedWord);
     }
 
     public List<WordResponseDto> getUnknownWordList(String member_id) {
         List<Word> words = wordRepository.findByMember_IdAndKnowStatus(member_id, false);
-
-        // WordResponseDto로 변환하여 반환
         return words.stream()
                 .map(WordResponseDto::new)
                 .collect(Collectors.toList());
@@ -74,7 +69,7 @@ public class WordService {
                 .knowStatus(false)
                 .createdDate(now)
                 .modifiedDate(now)
-                .member(member) // Member 객체 설정
+                .member(member)
                 .build();
 
         wordRepository.save(word);

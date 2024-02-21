@@ -9,12 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class BaseExceptionHandler {
-    /**
-     * BusinessException에서 발생한 에러
-     *
-     * @param ex LearnException
-     * @return ResponseEntity
-     */
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleLearnException(CustomException ex) {
         log.debug("===========================================================");

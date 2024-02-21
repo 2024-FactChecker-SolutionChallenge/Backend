@@ -17,7 +17,6 @@ public class GlobalResponse<T> {
     private final static int NOT_FOUND = 400;
     private final static int FAILED = 500;
 
-    //custom
     private final static int UNAUTHORIZED = 401;
     private final static int FORBIDDEN = 403;
     private final static int CONFLICT = 409;

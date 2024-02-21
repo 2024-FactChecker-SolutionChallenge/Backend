@@ -21,14 +21,11 @@ public class EmailService {
 
 
     public String sendEmailAndGenerateCode(String to) throws Exception {
-        // 각 이메일에 대해 새로운 인증 코드를 생성.
         String ePw = createKey();
 
-        // 이메일을 생성하
         MimeMessage message = createMessage(to, ePw);
         emailSender.send(message);
 
-        // 생성된 인증 코드를 반환
         return ePw;
     }
 
@@ -37,8 +34,8 @@ public class EmailService {
         log.info("인증번호 : " + ePw);
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(MimeMessage.RecipientType.TO, to); //수신자 지정
-        message.setSubject("[Truetree] 이메일 인증번호를 확인해주세요."); //발신 메일제목
+        message.addRecipients(MimeMessage.RecipientType.TO, to);
+        message.setSubject("[Truetree] 이메일 인증번호를 확인해주세요.");
 
         String msgg = "";
         msgg += "CODE : <strong>" + ePw + "</strong><div><br/> ";
@@ -49,26 +46,22 @@ public class EmailService {
         return message;
     }
 
-    // 인증번호 생성기
     public static String createKey() {
         StringBuilder key = new StringBuilder();
         Random rnd = new Random();
 
-        for (int i = 0; i < 8; i++) { // 인증코드 8자리
-            int index = rnd.nextInt(3); // 0~2 까지 랜덤
+        for (int i = 0; i < 8; i++) {
+            int index = rnd.nextInt(3);
 
             switch (index) {
                 case 0:
                     key.append((char) ((int) (rnd.nextInt(26)) + 97));
-                    //  a~z  (ex. 1+97=98 => (char)98 = 'b')
                     break;
                 case 1:
                     key.append((char) ((int) (rnd.nextInt(26)) + 65));
-                    //  A~Z
                     break;
                 case 2:
                     key.append((rnd.nextInt(10)));
-                    // 0~9
                     break;
             }
         }
@@ -76,13 +69,12 @@ public class EmailService {
     }
 
     public String sendSimpleMessage(String to) throws Exception {
-        // TODO: 인증 코드 생성 로직을 여기에서 호출하지 않도록 수정할 것
         String ePw = createKey();
 
         MimeMessage message = createMessage(to, ePw);
         log.info(String.valueOf(message));
 
-        try { // 예외처리        message.setFrom(new InternetAddress("truetree.factchecker@gmail.com", "factchecker"));
+        try {
             emailSender.send(message);
             log.info("이메일 전송에 성공");
         } catch (MailException es) {
@@ -90,6 +82,6 @@ public class EmailService {
             log.info("이메일 전송에 실패");
             throw new IllegalArgumentException();
         }
-        return ePw; // 반환값
+        return ePw;
     }
 }
