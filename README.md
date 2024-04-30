@@ -2,4 +2,4 @@
 This is the spring backend code for the Truetreech UI.
 
 ## API endpoints
-The API endpoints for the backend are as follows..
+The API endpoints for the backend are as follows...
