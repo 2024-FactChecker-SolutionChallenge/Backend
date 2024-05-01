@@ -15,7 +15,11 @@ steps:
 
   # Docker 이미지 빌드
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/truetree-cloud-run:$SHORT_SHA', '.']
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/truetree-cloud-run:$SHORT_SHA'
+      - '.'
   options:
     logging: CLOUD_LOGGING_ONLY
   # Docker 이미지 푸시
