@@ -33,3 +33,5 @@ images:
   - 'gcr.io/$PROJECT_ID/truetree-cloud-run:$SHORT_SHA'
 
 timeout: '1600s'
+options:
+  logging: CLOUD_LOGGING_ONLY
