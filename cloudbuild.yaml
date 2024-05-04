@@ -1,18 +1,4 @@
 steps:
-  # JDK 11 설치 및 환경 설정
-  - name: 'gcr.io/cloud-builders/mvn'
-    entrypoint: /bin/bash
-    args:
-      - '-c'
-      - |
-        apt-get update && apt-get install -y openjdk-11-jdk
-        java -version
-        export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-        export PATH=$JAVA_HOME/bin:$PATH
-        chmod +x ./gradlew
-        ./gradlew clean bootJar -x test
-    dir: 'src'
-
   # Docker 이미지 빌드
   - name: 'gcr.io/cloud-builders/docker'
     args: 
