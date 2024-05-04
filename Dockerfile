@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . .
 
 # Gradle 빌드를 실행합니다.
-RUN ./gradlew clean build -x test
+RUN ./gradlew bootJar
 # build/libs/ 디렉토리의 내용을 출력합니다.
 RUN ls -l /app/build/libs/
 
