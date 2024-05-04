@@ -1,28 +1,4 @@
-substitutions:
-  _JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
 steps:
-  # Gradlew 실행 허용
-  - name: 'gcr.io/cloud-builders/mvn'
-    entrypoint: /bin/bash
-    args:
-      - '-c'
-      - |
-        chmod +x ./gradlew
-  # JDK 11 설치 및 환경 설정
-  - name: 'gcr.io/cloud-builders/mvn'
-    entrypoint: /bin/bash
-    args:
-      - '-c'
-      - |
-        apt-get update && apt-get install -y openjdk-11-jdk
-        export JAVA_HOME=$_JAVA_HOME
-        export PATH=$JAVA_HOME/bin:$PATH
-  # 스프링 부트 애플리케이션 빌드
-  - name: 'gcr.io/cloud-builders/mvn'
-    entrypoint: /bin/bash
-    args:
-      - '-c'
-      - './gradlew clean bootJar -x test'
   # Docker 이미지 빌드
   - name: 'gcr.io/cloud-builders/docker'
     args: 
