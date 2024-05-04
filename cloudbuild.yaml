@@ -1,4 +1,11 @@
 steps:
+  # Gradlew 실행 허용
+  - name: 'gcr.io/cloud-builders/mvn'
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - |
+        chmod +x ./gradlew
   # JDK 11 설치 및 환경 설정
   - name: 'gcr.io/cloud-builders/mvn'
     entrypoint: /bin/bash
@@ -6,12 +13,14 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y openjdk-11-jdk
-        java -version
         export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
         export PATH=$JAVA_HOME/bin:$PATH
-        chmod +x ./gradlew
-        ./gradlew clean bootJar -x test
-    dir: 'src'
+  # 스프링 부트 애플리케이션 빌드
+  - name: 'gcr.io/cloud-builders/mvn'
+    entrypoint: /bin/bash
+    args:
+      - '-c'
+      - './gradlew clean bootJar -x test'
   # Docker 이미지 빌드
   - name: 'gcr.io/cloud-builders/docker'
     args: 
