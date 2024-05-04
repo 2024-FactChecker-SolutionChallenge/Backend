@@ -9,7 +9,7 @@ COPY . .
 # Gradle 빌드를 실행합니다.
 RUN ./gradlew clean build -x test
 # build/libs/ 디렉토리의 내용을 출력합니다.
-RUN ls -l build/libs/
+RUN ls -l /app/build/libs/
 
 # Stage 2: JAR 파일 실행을 위한 이미지 구성
 FROM openjdk:11-jdk-slim-buster
