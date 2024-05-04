@@ -14,8 +14,6 @@ RUN ls -l /app/build/libs/
 # Stage 2: JAR 파일 실행을 위한 이미지 구성
 FROM openjdk:11-jdk-slim-buster
 
-WORKDIR /app
-
 # 빌드된 JAR 파일을 복사합니다.
 COPY --from=builder /app/build/libs/*.jar app.jar
 
@@ -23,7 +21,7 @@ RUN ls -l /app/
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 
 
