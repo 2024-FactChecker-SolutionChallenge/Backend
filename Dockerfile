@@ -17,8 +17,6 @@ FROM openjdk:11-jdk-slim-buster
 # 빌드된 JAR 파일을 복사합니다.
 COPY --from=builder /app/build/libs/*.jar app.jar
 
-RUN ls -l /app/
-
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
