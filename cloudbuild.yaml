@@ -13,7 +13,7 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y openjdk-11-jdk
-        export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+        export JAVA_HOME=$_JAVA_HOME
         export PATH=$JAVA_HOME/bin:$PATH
   # 스프링 부트 애플리케이션 빌드
   - name: 'gcr.io/cloud-builders/mvn'
