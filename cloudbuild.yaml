@@ -1,3 +1,5 @@
+substitutions:
+  _JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
 steps:
   # Gradlew 실행 허용
   - name: 'gcr.io/cloud-builders/mvn'
